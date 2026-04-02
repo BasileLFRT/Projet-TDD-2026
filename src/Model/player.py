@@ -1,16 +1,10 @@
 import datetime
 from .personne import Personne
-from typing import Union
-from src.Common.utils import parse_boolean
 
 class Player:
-    def __init__(self, id: int, full_name: str, is_the_goat: Union[str, bool]):
+    def __init__(id : int, nom : str, birthdate : datetime.date, team_id : int, stats : dict[str, list[float]]) -> None:
         self.id = id
-        self.full_name = full_name
-        self.is_the_goat = parse_boolean(is_the_goat)
-
-    def __repr__(self):
-        display_string = self.full_name
-        if self.is_the_goat:
-            display_string += " (GOAT)"
-        return display_string
+        self.nom = nom
+        self.birthdate = birthdate
+        self.team_id = team_id
+        self.stats = stats
