@@ -1,5 +1,6 @@
 from datetime import date
 from reglescore import RegleScore
+from sport import Sport
 
 class Competition:
     """
@@ -20,3 +21,5 @@ class Competition:
             self._sport = sport
             self._annee = annee
             self._regle = regle
+
+
