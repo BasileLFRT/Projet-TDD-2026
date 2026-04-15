@@ -1,15 +1,17 @@
+import datetime
 class Match:
 
-    def __init__(self, id, date, team1, team2, score1, score2):
+    def __init__(self, match_id: int, date:datetime, home_team:str, away_team:str, home_score:int, away_score:int):
+        self.match_id = match_id
         self.date = date
-        self.team1 = team1
-        self.team2 = team2
-        self.score1 = score1
-        self.score2 = score2
+        self.home_team = home_team
+        self.away_team = away_team
+        self.home_score = home_score
+        self.away_score = away_score
 
     def winner(self):
-        if self.score1 > self.score2:
-            return self.team1
+        if self.home_score > self.away_score:
+            return self.home_team
         elif self.score2 > self.score1:
             return self.team2
         return None

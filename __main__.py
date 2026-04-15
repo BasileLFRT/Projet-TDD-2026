@@ -4,6 +4,10 @@ from src.Parsers.parse_csv import parse_players_csv
 from src.Analysis.pandas.GoatFinder import find_the_goat_in_df
 from src.Analysis.homemade.GoatFinder import find_the_goat
 
+from src.Parsers.FootballMatchLoader import liste_matchs
+print(liste_matchs[0])
+
+
 setting = input("Select a setting, 0=pandas-powered, 1=àlamain-powered\n")
 
 if setting == "0":
