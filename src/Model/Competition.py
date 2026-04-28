@@ -14,5 +14,3 @@ class Competition:
 
     def get_teams(self) -> list:
         return []
-
-

@@ -1,20 +1,20 @@
 from src.Model.Match import Match
-from src.Model.Sport import Sport
+from src.Model.Competition import Competition
 from .adapters.FootballMatchLoader import FootballMatchLoader
+from .adapters.ChampionsLeagueMatchLoader import ChampionsLeagueMatchLoader
 
-match_loaders_by_sport = {
-    "football": FootballMatchLoader,
+match_loaders_by_competition = {
+    "european_leagues": FootballMatchLoader,
+    "champions_league": ChampionsLeagueMatchLoader,
 }
 
 
 class MatchLoader():
-    def load_all_matches(self, sport: Sport) -> list[Match]:
-        loader = match_loaders_by_sport.get(sport.nom)
-
+    def load_all_matches(self, competition: Competition) -> list[Match]:
+        loader = match_loaders_by_competition.get(competition.nom)
         if loader is None:
-            raise Exception("Sport non supporté")
-
-        return loader.load_all_matches()
+            raise Exception("Compétition non supportée")
+        return loader().load_all_matches()
 
         # if sport.name == "football":
         #     # Ce sont ces classes {Sport}MatchLoader qui "savent" où lire les données csv
