@@ -1,4 +1,4 @@
-from personne import Personne
+from .Personne import Personne
 
 class Player(Personne):
    pass

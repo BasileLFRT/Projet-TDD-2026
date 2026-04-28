@@ -8,18 +8,16 @@ import csv
 # you may be able to use inheritance to your advantage
 
 class FootballPlayerLoader:
-    def __init__(self, file_path):
-        self.file_path = file_path
-
-    @print_timings
     def load_all_players(self) -> List[Player]:
         players_list = []
-        with open(self.file_path, newline='') as csvfile:
+        with open('./data/football_european_leagues/player.csv', newline='') as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
-                # Note:
-                # The specifics of
-                player = Player(row['player_api_id'], row['player_name'])
+                player = Player(nom=row['player_name'], birthdate=None)
                 players_list.append(player)
-
         return players_list
+
+if __name__ == "__main__":
+    players = FootballPlayerLoader().load_all_players()
+    for player in players:
+        print(player)

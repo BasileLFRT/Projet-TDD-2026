@@ -1,5 +1,5 @@
 from src.Common.utils import print_timings
-from csv_importer import CsvImporter
+from .csv_importer import CsvImporter
 
 
 @print_timings
@@ -12,4 +12,4 @@ def parse_players_csv(filepath: str, sep: str = ";") -> list:
 
 @print_timings
 def parse_teams_csv(filepath: str, sep: str = ";") -> list:
-
+    pass

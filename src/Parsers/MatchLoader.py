@@ -1,19 +1,15 @@
 from src.Model.Match import Match
 from src.Model.Sport import Sport
 from .adapters.FootballMatchLoader import FootballMatchLoader
-from .adapters.TennisMatchLoader import TennisMatchLoader
-from pandas import df
 
 match_loaders_by_sport = {
     "football": FootballMatchLoader,
-    "tennis": TennisMatchLoader
 }
 
 
 class MatchLoader():
-    def load_all_matches(sport: Sport) -> df[Match]:
-
-        loader = match_loaders_by_sport[sport]
+    def load_all_matches(self, sport: Sport) -> list[Match]:
+        loader = match_loaders_by_sport.get(sport.nom)
 
         if loader is None:
             raise Exception("Sport non supporté")
@@ -31,4 +27,4 @@ class MatchLoader():
 
 
 # Exemple d'utilisation
-mes_matchs: df[Match] = MatchLoader.load_all_matches(Sport(name="tourniquet artistique"))
+#mes_matchs: df[Match] = MatchLoader.load_all_matches(Sport(name="tourniquet artistique"))
