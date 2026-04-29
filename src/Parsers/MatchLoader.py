@@ -4,11 +4,15 @@ from src.Model.Sport import Sport
 from .adapters.FootballMatchLoader import FootballMatchLoader
 from .adapters.ChampionsLeagueMatchLoader import ChampionsLeagueMatchLoader
 from .adapters.BasketballMatchLoader import BasketballMatchLoader
+from .adapters.ATPMatchLoader import ATPMatchLoader
+from .adapters.WTAMatchLoader import WTAMatchLoader
 
 match_loaders_by_competition = {
     "european_leagues": FootballMatchLoader,
     "champions_league": ChampionsLeagueMatchLoader,
     "basketball": BasketballMatchLoader,
+    "atp": ATPMatchLoader,
+    "wta": WTAMatchLoader,
 }
 
 

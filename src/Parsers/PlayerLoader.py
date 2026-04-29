@@ -6,12 +6,16 @@ from src.Model.Sport import Sport
 from .adapters.FootballPlayerLoader import FootballPlayerLoader
 from .adapters.ChampionsLeaguePlayerLoader import ChampionsLeaguePlayerLoader
 from .adapters.BasketballPlayerLoader import BasketballPlayerLoader
+from .adapters.ATPPlayerLoader import ATPPlayerLoader
+from .adapters.WTAPlayerLoader import  WTAPlayerLoader
 
 # Config only once per app
 player_loaders_by_competition = {
     "european_leagues": FootballPlayerLoader,
     "champions_league": ChampionsLeaguePlayerLoader,
-    "basketball": BasketballPlayerLoader
+    "basketball": BasketballPlayerLoader,
+    "atp": ATPPlayerLoader,
+    "wta": WTAPlayerLoader,
 }
 
 

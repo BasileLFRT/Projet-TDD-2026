@@ -11,7 +11,10 @@ def show_match_players(sport: Sport, competition: Competition = None):
     match_choisi = matches[index]
     print(f"Match choisi : {match_choisi}")
 
-    if competition is not None:
+    if sport.nom == "tennis":
+        csv_folder = "./data/tennis"
+        match_file = f"{competition.nom}_matches_2024.csv"
+    elif competition is not None:
         csv_folder = f"./data/football_{competition.nom}"
         match_file = "match.csv"
     else:
@@ -19,7 +22,7 @@ def show_match_players(sport: Sport, competition: Competition = None):
         match_file = "game.csv"
 
     matches_df = pd.read_csv(f"{csv_folder}/{match_file}")
-    players_df = pd.read_csv(f"{csv_folder}/player.csv")
+    players_df = pd.read_csv(f"{csv_folder}/player.csv" if sport.nom != "tennis" else f"{csv_folder}/{competition.nom}_players_2024.csv")
 
     if competition and competition.nom == "european_leagues":
         player_cols = [f"home_player_{i}" for i in range(1, 12)] + [f"away_player_{i}" for i in range(1, 12)]
@@ -32,6 +35,11 @@ def show_match_players(sport: Sport, competition: Competition = None):
         players_in_match = players_df[players_df["club"].isin([match_choisi.team1, match_choisi.team2])]
         for _, player in players_in_match.iterrows():
             print(player["player_name"])
+            print(player["player_name"])
+    elif sport.nom == "tennis":
+        players_in_match = players_df[players_df["player_id"].astype(str).isin([match_choisi.team1, match_choisi.team2])]
+        for _, player in players_in_match.iterrows():
+            print(f"{player['name_first']} {player['name_last']}")
     else:
         players_in_match = players_df[players_df["team_id"].isin([int(match_choisi.team1), int(match_choisi.team2)])]
         for _, player in players_in_match.iterrows():
