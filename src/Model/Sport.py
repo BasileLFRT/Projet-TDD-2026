@@ -1,5 +1,5 @@
 class Sport:
-    SPORTS_AUTORISES = ["football"]
+    SPORTS_AUTORISES = ["football", "basketball"]
 
     def __init__(self, nom: str):
         if nom not in self.SPORTS_AUTORISES:

@@ -1,17 +1,21 @@
 from src.Model.Match import Match
 from src.Model.Competition import Competition
+from src.Model.Sport import Sport
 from .adapters.FootballMatchLoader import FootballMatchLoader
 from .adapters.ChampionsLeagueMatchLoader import ChampionsLeagueMatchLoader
+from .adapters.BasketballMatchLoader import BasketballMatchLoader
 
 match_loaders_by_competition = {
     "european_leagues": FootballMatchLoader,
     "champions_league": ChampionsLeagueMatchLoader,
+    "basketball": BasketballMatchLoader,
 }
 
 
 class MatchLoader():
-    def load_all_matches(self, competition: Competition) -> list[Match]:
-        loader = match_loaders_by_competition.get(competition.nom)
+    def load_all_matches(self, sport: Sport, competition: Competition = None) -> list[Match]:
+        key = competition.nom if competition else sport.nom
+        loader = match_loaders_by_competition.get(key)
         if loader is None:
             raise Exception("Compétition non supportée")
         return loader().load_all_matches()
