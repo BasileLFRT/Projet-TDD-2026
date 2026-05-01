@@ -51,7 +51,7 @@ class TestLoLTeamLoader:
 class TestTeamLoader:
     @patch("builtins.open", mock_open(read_data=LOL_CSV_CONTENT))
     def test_load_with_competition(self):
-        competition = Competition(nom="lol")
+        competition = Competition(id=1, nom="lol", sport="lol", annee=2024)
         teams = TeamLoader().load_all_teams(sport=None, competition=competition)
         assert len(teams) == 3
 
@@ -61,6 +61,6 @@ class TestTeamLoader:
             TeamLoader().load_all_teams(sport=sport)
 
     def test_unsupported_competition_raises(self):
-        competition = Competition(nom="sport_inconnu")
+        competition = Competition(id=99, nom="sport_inconnu", sport="inconnu", annee=2024)
         with pytest.raises(Exception, match="non supporté"):
             TeamLoader().load_all_teams(sport=None, competition=competition)
