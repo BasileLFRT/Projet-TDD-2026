@@ -2,10 +2,8 @@ import pandas as pd
 from src.Model.Competition import Competition
 from src.Model.Sport import Sport
 
-def show_player_profile(sport: Sport, competition: Competition = None):
-
+def show_player_profile(players_df, sport: Sport, competition: Competition = None):
     if sport.nom == "tennis":
-        players_df = pd.read_csv(f"./data/tennis/{competition.nom}_players_2024.csv")
         players_df["full_name"] = players_df["name_first"] + " " + players_df["name_last"]
         for i, row in players_df.iterrows():
             print(f"{i} - {row['full_name']}")
@@ -26,7 +24,6 @@ def show_player_profile(sport: Sport, competition: Competition = None):
         print(f"  Matchs gagnés : {len(wins)}")
 
     elif competition and competition.nom == "european_leagues":
-        players_df = pd.read_csv("./data/football_european_leagues/player.csv")
         teams_df = pd.read_csv("./data/football_european_leagues/team.csv")
         matches_df = pd.read_csv("./data/football_european_leagues/match.csv")
         for i, row in players_df.iterrows():
@@ -60,7 +57,6 @@ def show_player_profile(sport: Sport, competition: Competition = None):
         print(f"  Matchs gagnés : {total_wins}")
 
     elif competition and competition.nom == "champions_league":
-        players_df = pd.read_csv("./data/football_champions_league/player.csv")
         for i, row in players_df.iterrows():
             print(f"{i} - {row['player_name']}")
         index = int(input("Sélectionne un joueur (numéro) : "))
@@ -83,7 +79,6 @@ def show_player_profile(sport: Sport, competition: Competition = None):
         print(f"  Minutes jouées : {p['minutes_played']}")
 
     else:  # basketball
-        players_df = pd.read_csv("./data/basketball/player.csv")
         teams_df = pd.read_csv("./data/basketball/team.csv")
         players_df["full_name"] = players_df["first_name"] + " " + players_df["last_name"]
         for i, row in players_df.iterrows():

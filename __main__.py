@@ -4,9 +4,13 @@ from src.Model.Sport import Sport
 from src.Analysis.pandas.MatchPlayers import show_match_players
 from src.Analysis.pandas.GoatFinder import find_the_goat_in_df
 from src.Analysis.pandas.GoatFinderCL import find_the_goat_cl
-from src.Analysis.homemade.GoatFinder import find_the_goat
 from src.Analysis.pandas.PlayerMatches import show_player_matches
+from src.Analysis.pandas.PlayerProfile import show_player_profile
+from src.Analysis.homemade.GoatFinder import find_the_goat
+from src.Analysis.pandas.GoatFinderBasketball import find_the_goat_basketball
+from src.Analysis.pandas.GoatFinderTennis import find_the_goat_tennis
 from src.Parsers.parse_csv import parse_players_csv
+from src.Parsers.MatchLoader import MatchLoader
 
 print("Quel sport ?")
 print("1 - Football")
@@ -34,10 +38,21 @@ else:
     print("2 - WTA")
     competition_choice = input("Ton choix : ")
     if competition_choice == "1":
+
         competition = Competition(id=3, nom="atp", sport="tennis", annee=2024)
     else:
         competition = Competition(id=4, nom="wta", sport="tennis", annee=2024)
 
+matches = MatchLoader().load_all_matches(sport, competition)
+
+if competition is not None and competition.nom == "champions_league":
+    players_df = pd.read_csv("./data/football_champions_league/player.csv")
+elif competition is not None and competition.nom == "european_leagues":
+    players_df = pd.read_csv("./data/football_european_leagues/player.csv")
+elif sport.nom == "tennis":
+    players_df = pd.read_csv(f"./data/tennis/{competition.nom}_players_2024.csv")
+else:
+    players_df = pd.read_csv("./data/basketball/player.csv")
 
 print("Que veux-tu faire ?")
 print("1 - Voir les joueurs d'un match")
@@ -47,33 +62,25 @@ print("4 - Voir le profil d'un joueur")
 choice = input("Ton choix : ")
 
 if choice == "1":
-    show_match_players(sport, competition)
+    show_match_players(matches, sport, competition)
 elif choice == "2":
-    if competition is not None and competition.nom == "champions_league":
-        players_df = pd.read_csv("./data/football_champions_league/player.csv")
+    if competition is not None and competition.nom == "champions_league":       
         the_goat = find_the_goat_cl(players_df)
         print(f"Le GOAT est : {the_goat}")
     elif sport.nom == "basketball":
-        from src.Analysis.pandas.GoatFinderBasketball import find_the_goat_basketball
-        players_df = pd.read_csv("./data/basketball/player.csv")
         the_goat = find_the_goat_basketball(players_df)
         print(f"Le GOAT est : {the_goat}")
     elif sport.nom == "tennis":
-        from src.Analysis.pandas.GoatFinderTennis import find_the_goat_tennis
-        players_df = pd.read_csv(f"./data/tennis/{competition.nom}_players_2024.csv")
         the_goat = find_the_goat_tennis(players_df, competition.nom)
         print(f"Le GOAT est : {the_goat}")
     else:
         setting = input("Select a setting, 0=pandas-powered, 1=àlamain-powered\n")
         if setting == "0":
-            players_df = pd.read_csv("./data/football_european_leagues/player.csv")
             the_goat = find_the_goat_in_df(players_df)
         else:
-            players = parse_players_csv("./data/football_european_leagues/player.csv")
             the_goat = find_the_goat(players)
         print(f"Le GOAT est : {the_goat}")
 elif choice == "3":
-    show_player_matches(sport, competition)
+    show_player_matches(players_df, matches, sport, competition)
 elif choice == "4":
-    from src.Analysis.pandas.PlayerProfile import show_player_profile
-    show_player_profile(sport, competition)
+    show_player_profile(players_df, sport, competition)

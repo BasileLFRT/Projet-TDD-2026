@@ -1,13 +1,9 @@
 import pandas as pd
-from src.Parsers.PlayerLoader import PlayerLoader
-from src.Parsers.MatchLoader import MatchLoader
 from src.Model.Competition import Competition
 from src.Model.Sport import Sport
 
-def show_player_matches(sport: Sport, competition: Competition = None):
-    # Charger les joueurs et afficher la liste
+def show_player_matches(players_df, matches, sport: Sport, competition: Competition = None):
     if sport.nom == "tennis":
-        players_df = pd.read_csv(f"./data/tennis/{competition.nom}_players_2024.csv")
         players_df["full_name"] = players_df["name_first"] + " " + players_df["name_last"]
         for i, row in players_df.iterrows():
             print(f"{i} - {row['full_name']}")
@@ -23,7 +19,6 @@ def show_player_matches(sport: Sport, competition: Competition = None):
             print(f"{match['tourney_date']} | {match['tourney_name']} | {match['winner_id']} vs {match['loser_id']} | {match['score']}")
 
     elif competition and competition.nom == "european_leagues":
-        players_df = pd.read_csv("./data/football_european_leagues/player.csv")
         for i, row in players_df.iterrows():
             print(f"{i} - {row['player_name']}")
         index = int(input("Sélectionne un joueur (numéro) : "))
@@ -35,7 +30,6 @@ def show_player_matches(sport: Sport, competition: Competition = None):
             print(f"{match['date']} | {match['home_team_api_id']} {match['home_team_goal']} - {match['away_team_goal']} {match['away_team_api_id']}")
 
     elif competition and competition.nom == "champions_league":
-        players_df = pd.read_csv("./data/football_champions_league/player.csv")
         for i, row in players_df.iterrows():
             print(f"{i} - {row['player_name']}")
         index = int(input("Sélectionne un joueur (numéro) : "))
@@ -46,7 +40,6 @@ def show_player_matches(sport: Sport, competition: Competition = None):
             print(f"{match['date']} | {match['team_home']} {match['score_team_home']} - {match['score_team_away']} {match['team_away']}")
 
     else:  # basketball
-        players_df = pd.read_csv("./data/basketball/player.csv")
         players_df["full_name"] = players_df["first_name"] + " " + players_df["last_name"]
         for i, row in players_df.iterrows():
             print(f"{i} - {row['full_name']}")

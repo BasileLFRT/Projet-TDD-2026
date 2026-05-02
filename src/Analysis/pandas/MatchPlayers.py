@@ -1,10 +1,9 @@
 import pandas as pd
-from src.Parsers.MatchLoader import MatchLoader
 from src.Model.Competition import Competition
 from src.Model.Sport import Sport
+from src.Model.Match import Match
 
-def show_match_players(sport: Sport, competition: Competition = None):
-    matches = MatchLoader().load_all_matches(sport, competition)
+def show_match_players(matches: list[Match], sport: Sport, competition: Competition = None):
     for i, match in enumerate(matches):
         print(f"{i} - {match}")
     index = int(input("Sélectionne un match (numéro) : "))
@@ -34,7 +33,6 @@ def show_match_players(sport: Sport, competition: Competition = None):
     elif competition and competition.nom == "champions_league":
         players_in_match = players_df[players_df["club"].isin([match_choisi.team1, match_choisi.team2])]
         for _, player in players_in_match.iterrows():
-            print(player["player_name"])
             print(player["player_name"])
     elif sport.nom == "tennis":
         players_in_match = players_df[players_df["player_id"].astype(str).isin([match_choisi.team1, match_choisi.team2])]

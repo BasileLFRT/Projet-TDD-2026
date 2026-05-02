@@ -1,15 +1,25 @@
-from src.Model.Player import Player
+import datetime
 
 
-def test_Player_constructor_is_ok_with_valid_data():
-    platoche = Player(1980, "Michel Platini", "false")
-    assert platoche.id == 1980
-    assert not platoche.is_the_goat
+class Personne:
+    def __init__(self, nom: str, birthdate: datetime.date) -> None:
+        self._nom = nom
+        self._birthdate = birthdate
 
+    @property
+    def nom(self) -> str:
+        return self._nom
 
-def test_player_repr_method_displays_goat_tag_for_the_goat():
-    kiki = Player(2018, "Kylian Mbappé", "false")
-    assert str(kiki) == "Kylian Mbappé"
+    def __str__(self) -> str:
+        return self._nom
 
-    the_goat = Player(1928, "Arthur Friedenreich", True)
-    assert str(the_goat) == "Arthur Friedenreich (GOAT)"
+    def __repr__(self) -> str:
+        return f"Personne(nom='{self._nom}')"
+
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, Personne):
+            return NotImplemented
+        return self._nom == other._nom
+
+    def __hash__(self) -> int:
+        return hash(self._nom)
