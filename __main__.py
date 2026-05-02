@@ -5,6 +5,7 @@ from src.Analysis.pandas.MatchPlayers import show_match_players
 from src.Analysis.pandas.GoatFinder import find_the_goat_in_df
 from src.Analysis.pandas.GoatFinderCL import find_the_goat_cl
 from src.Analysis.homemade.GoatFinder import find_the_goat
+from src.Analysis.pandas.PlayerMatches import show_player_matches
 from src.Parsers.parse_csv import parse_players_csv
 
 print("Quel sport ?")
@@ -41,6 +42,8 @@ else:
 print("Que veux-tu faire ?")
 print("1 - Voir les joueurs d'un match")
 print("2 - Trouver le GOAT")
+print("3 - Voir les matchs d'un joueur")
+print("4 - Voir le profil d'un joueur")
 choice = input("Ton choix : ")
 
 if choice == "1":
@@ -69,3 +72,8 @@ elif choice == "2":
             players = parse_players_csv("./data/football_european_leagues/player.csv")
             the_goat = find_the_goat(players)
         print(f"Le GOAT est : {the_goat}")
+elif choice == "3":
+    show_player_matches(sport, competition)
+elif choice == "4":
+    from src.Analysis.pandas.PlayerProfile import show_player_profile
+    show_player_profile(sport, competition)
