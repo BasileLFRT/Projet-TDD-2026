@@ -130,26 +130,41 @@ elif choix_regarder == "2":
             show_player_profile(players_df, sport, competition)
 
     elif choix_joueur == "3":
-        players_list = PlayerLoader().load_all_players(sport, competition)
-        print("Joueur 1")
-        for i, p in enumerate(players_list):
-            print(f"{i} - {p.nom}")
-        index = int(input("Ton choix : "))
-        joueur_1 = players_list[index]
-
-        print("Joueur 2")
-        for i, p in enumerate(players_list):
-            print(f"{i} - {p.nom}")
-        index = int(input("Ton choix : "))
-        joueur_2 = players_list[index]
-
-        if sport.nom == "basketball":
-            index_1 = players_df[(players_df["first_name"] + " " + players_df["last_name"]) == joueur_1.nom].index[0]
-            index_2 = players_df[(players_df["first_name"] + " " + players_df["last_name"]) == joueur_2.nom].index[0]
-        else:
-            index_1 = players_df[players_df.apply(lambda row: joueur_1.nom in str(row.values), axis=1)].index[0]
-            index_2 = players_df[players_df.apply(lambda row: joueur_2.nom in str(row.values), axis=1)].index[0]
-
+        def get_player_index(label):
+            print(f"Comment est-ce que tu veux trouver le {label} ?")
+            print("1 - Rentrer un nom")
+            print("2 - Choisir dans la liste")
+            choix = input("Ton choix : ")
+            if choix == "1":
+                search_string = input(f"Nom du {label} : ")
+                players_list = PlayerLoader().load_all_players(sport, competition)
+                results = PlayerSearch().filter_players_by_full_name(players_list, search_string)
+                if len(results) == 1:
+                    nom = results[0].nom
+                else:
+                    for i, p in enumerate(results):
+                        print(f"{i} - {p.nom}")
+                    i = int(input("Ton choix : "))
+                    nom = results[i].nom
+                if sport.nom == "basketball":
+                    filtre = (players_df["first_name"] + " " + players_df["last_name"]) == nom
+                elif sport.nom == "tennis":
+                    filtre = (players_df["name_first"] + " " + players_df["name_last"]) == nom
+                else:
+                    filtre = players_df["player_name"] == nom
+                return players_df[filtre].index[0]
+            else:
+                for i, row in players_df.iterrows():
+                    if sport.nom == "tennis":
+                        print(f"{i} - {row['name_first']} {row['name_last']}")
+                    elif sport.nom == "basketball":
+                        print(f"{i} - {row['first_name']} {row['last_name']}")
+                    else:
+                        print(f"{i} - {row['player_name']}")
+                return int(input("Ton choix : "))
+        
+        index_1 = get_player_index("joueur 1")
+        index_2 = get_player_index("joueur 2")
         show_player_comparison(players_df, matches_df, sport, competition, index_1, index_2)
 
 #Stats

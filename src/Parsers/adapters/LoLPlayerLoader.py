@@ -15,9 +15,3 @@ class LoLPlayerLoader:
                 )
                 players_list.append(player)
         return players_list
-
-
-if __name__ == "__main__":
-    players = LoLPlayerLoader().load_all_players()
-    for player in players:
-        print(player)
