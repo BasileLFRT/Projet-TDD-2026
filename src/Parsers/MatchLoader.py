@@ -12,6 +12,7 @@ from .adapters.ChessMatchLoader import ChessMatchLoader
 from .adapters.BadmintonMatchLoader import BadmintonMatchLoader
 from .adapters.LoLMatchLoader import LoLMatchLoader
 from .adapters.CS2MatchLoader import CS2MatchLoader
+from .adapters.StarcraftMatchLoader import StarcraftMatchLoader
 
 match_loaders_by_competition = {
     "european_leagues": FootballMatchLoader,
@@ -24,7 +25,8 @@ match_loaders_by_competition = {
     "chess": ChessMatchLoader,
     "badminton": BadmintonMatchLoader,
     "lol": LoLMatchLoader,
-    "cs2": CS2MatchLoader
+    "cs2": CS2MatchLoader,
+    "starcraft_2": StarcraftMatchLoader,
 }
 
 

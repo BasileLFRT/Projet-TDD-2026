@@ -3,8 +3,8 @@ from src.Model.Competition import Competition
 from src.Model.Sport import Sport
 
 def show_best_team(matches_df: pd.DataFrame, sport: Sport, competition: Competition = None):
-    if sport.nom == "tennis":
-        raise ValueError("Pas d'équipes au tennis")
+    if sport.nom in ["chess", "badminton", "starcraft_2", "tennis"]:
+        raise ValueError("Fonctionnalité non disponible pour ce sport individuel")
 
     wins = {}
 

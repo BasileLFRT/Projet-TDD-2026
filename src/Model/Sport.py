@@ -11,7 +11,7 @@ class Sport:
     ValueError
         Si le nom ne figure pas dans ``SPORTS_AUTORISES``.
         """
-    SPORTS_AUTORISES = ["football", "basketball", "tennis", "volleyball", "chess", "badminton", "lol", "cs2"]
+    SPORTS_AUTORISES = ["football", "basketball", "tennis", "volleyball", "chess", "badminton", "lol", "cs2", "starcraft_2"]
 
     def __init__(self, nom: str):
         if nom not in self.SPORTS_AUTORISES:

@@ -26,6 +26,18 @@ def show_best_match(matches_df: pd.DataFrame, sport: Sport, competition: Competi
         print(f"  {best['date']} | {best['team_home']} {int(best['score_team_home'])} - {int(best['score_team_away'])} {best['team_away']}")
         print(f"  Total de buts : {int(best['total_goals'])}")
 
+    elif sport.nom in ["chess", "starcraft_2"]:
+        best = matches_df.loc[(matches_df["score_player_1"] - matches_df["score_player_2"]).abs().idxmax()]
+        print(f"Match avec le plus grand écart :")
+        print(f"  {best['player_1']} {int(best['score_player_1'])} - {int(best['score_player_2'])} {best['player_2']}")
+
+    elif sport.nom == "badminton":
+        matches_df["total_games"] = matches_df["game_1_score"].notna().astype(int) + matches_df["game_2_score"].notna().astype(int) + matches_df["game_3_score"].notna().astype(int)
+        best = matches_df.loc[matches_df["total_games"].idxmax()]
+        print(f"Match le plus long :")
+        print(f"  {best['date']} | {best['player_1']} vs {best['player_2']}")
+        print(f"  {best['game_1_score']} / {best['game_2_score']} / {best['game_3_score']}")
+
     else:  # basketball
         matches_df["total_points"] = matches_df["pts_home"] + matches_df["pts_away"]
         best = matches_df.loc[matches_df["total_points"].idxmax()]

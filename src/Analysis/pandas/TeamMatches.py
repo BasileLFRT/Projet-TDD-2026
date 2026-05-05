@@ -3,7 +3,9 @@ from src.Model.Competition import Competition
 from src.Model.Sport import Sport
 
 def show_team_matches(matches_df: pd.DataFrame, sport: Sport, competition: Competition = None):
-    if competition and competition.nom == "european_leagues":
+    if sport.nom in ["chess", "badminton", "starcraft_2", "tennis"]:
+        raise ValueError("Fonctionnalité non disponible car c'est un sport individuel")
+    elif competition and competition.nom == "european_leagues":
         teams_df = pd.read_csv("./data/football_european_leagues/team.csv")
         for i, row in teams_df.iterrows():
             print(f"{i} - {row['team_long_name']}")
@@ -22,9 +24,6 @@ def show_team_matches(matches_df: pd.DataFrame, sport: Sport, competition: Compe
         team_matches = matches_df[(matches_df["team_home"] == team) | (matches_df["team_away"] == team)]
         for _, match in team_matches.iterrows():
             print(f"{match['date']} | {match['team_home']} {int(match['score_team_home'])} - {int(match['score_team_away'])} {match['team_away']}")
-
-    elif sport.nom == "tennis":
-        raise ValueError("Pas d'équipes au tennis")
 
     else:  # basketball
         teams_df = pd.read_csv("./data/basketball/team.csv")

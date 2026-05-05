@@ -14,6 +14,7 @@ from .adapters.ChessPlayerLoader import ChessPlayerLoader
 from .adapters.BadmintonPlayerLoader import BadmintonPlayerLoader
 from .adapters.LoLPlayerLoader import LoLPlayerLoader
 from .adapters.CS2PlayerLoader import CS2PlayerLoader
+from .adapters.StarcraftPlayerLoader import StarcraftPlayerLoader
 
 # Config only once per app
 player_loaders_by_competition = {
@@ -27,7 +28,8 @@ player_loaders_by_competition = {
     "chess": ChessPlayerLoader,
     "badminton": BadmintonPlayerLoader,
     "lol": LoLPlayerLoader,
-    "cs2": CS2PlayerLoader
+    "cs2": CS2PlayerLoader,
+    "starcraft_2": StarcraftPlayerLoader
 }
 
 
