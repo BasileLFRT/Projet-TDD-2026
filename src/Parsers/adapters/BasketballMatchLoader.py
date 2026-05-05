@@ -2,7 +2,20 @@ import csv
 from src.Model.Match import Match
 
 class BasketballMatchLoader:
+    """Classe permettant de charger les données des matchs de basketball à partir d'un fichier CSV.
+
+    Lit les données du fichier 'game.csv' lié au basketball et en crée des instances de Match
+    en utilisant les colonnes: game_id, game_date, team_id_home, team_id_away, pts_home, pts_away.
+    Les scores sont extraits des colonnes pts_home et pts_away, avec une valeur par défaut de 0
+    """
     def load_all_matches(self) -> list[Match]:
+        """ Lit le fichier CSV de basketball et en liste les matchs
+        
+        Returns:
+            list[Match]: Une liste d'instances Match qui sont les matchs chargés
+        Raises:
+            FileNotFoundError: Si le fichier CSV voulu n'est pas trouvé
+        """
         liste_matchs = []
         with open('./data/basketball/game.csv', newline='') as csvfile:
             reader = csv.DictReader(csvfile)

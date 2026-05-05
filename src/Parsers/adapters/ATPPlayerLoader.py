@@ -2,7 +2,17 @@ import csv
 from src.Model.Player import Player
 
 class ATPPlayerLoader:
+    """Classe permettant de charger les données des joueurs ATP à partir d'un fichier CSV.
+    
+    Lit les données du fichier 'atp_players_2024.csv' et en crée des instances de Player"""
     def load_all_players(self) -> list[Player]:
+        """ Lit le fichier CSV ATP et en liste les joueurs
+        
+        Returns:
+            list[Player]: Une liste d'instances Player qui sont les joueurs chargés
+        
+        Raises:
+            FileNotFoundError: Si le fichier CSV voulu n'est pas trouvé"""
         players_list = []
         with open('./data/tennis/atp_players_2024.csv', newline='') as csvfile:
             reader = csv.DictReader(csvfile)
