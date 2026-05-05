@@ -33,6 +33,6 @@ class StarcraftPlayerLoader:
 
 
 if __name__ == "__main__":
-    players = Starcraft2PlayerLoader().load_all_players()
+    players = StarcraftPlayerLoader().load_all_players()
     for player in players:
         print(player)
