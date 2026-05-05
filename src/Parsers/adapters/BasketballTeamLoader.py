@@ -5,7 +5,7 @@ class BasketballTeamLoader:
     """Classe permettant de charger des équipes NBA depuis un fichier CSV.
 
     Lit les données du fichier team.csv lié au basket et en crée des instances de Team
-    avec les colonnes : id, full_name, abbreviation.
+    avec les colonnes: id, full_name, abbreviation.
     Le champ competition_id est laissé à None au chargement
     et doit être assigné manuellement selon le contexte.
     """
