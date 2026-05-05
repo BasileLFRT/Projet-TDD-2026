@@ -6,6 +6,12 @@ from .adapters.ChampionsLeagueMatchLoader import ChampionsLeagueMatchLoader
 from .adapters.BasketballMatchLoader import BasketballMatchLoader
 from .adapters.ATPMatchLoader import ATPMatchLoader
 from .adapters.WTAMatchLoader import WTAMatchLoader
+from .adapters.VolleyballMenMatchLoader import VolleyballMenMatchLoader
+from .adapters.VolleyballWomenMatchLoader import VolleyballWomenMatchLoader
+from .adapters.ChessMatchLoader import ChessMatchLoader
+from .adapters.BadmintonMatchLoader import BadmintonMatchLoader
+from .adapters.LoLMatchLoader import LoLMatchLoader
+from .adapters.CS2MatchLoader import CS2MatchLoader
 
 match_loaders_by_competition = {
     "european_leagues": FootballMatchLoader,
@@ -13,6 +19,12 @@ match_loaders_by_competition = {
     "basketball": BasketballMatchLoader,
     "atp": ATPMatchLoader,
     "wta": WTAMatchLoader,
+    "volleyball_men": VolleyballMenMatchLoader,
+    "volleyball_women": VolleyballWomenMatchLoader,
+    "chess": ChessMatchLoader,
+    "badminton": BadmintonMatchLoader,
+    "lol": LoLMatchLoader,
+    "cs2": CS2MatchLoader
 }
 
 

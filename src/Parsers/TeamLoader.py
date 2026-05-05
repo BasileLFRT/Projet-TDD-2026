@@ -3,12 +3,16 @@ from src.Model.Competition import Competition
 from src.Model.Sport import Sport
 from .adapters.FootballTeamLoader import FootballTeamLoader
 from .adapters.LoLTeamLoader import LoLTeamLoader
+from .adapters.ChampionsLeagueTeamLoader import ChampionsLeagueTeamLoader
+from .adapters.BasketballTeamLoader import BasketballTeamLoader
+from .adapters.CS2TeamLoader import CS2TeamLoader
 
 team_loaders_by_competition = {
     "european_leagues": FootballTeamLoader,
+    "champions_league": ChampionsLeagueTeamLoader,
+    "basketball": BasketballTeamLoader,
     "lol": LoLTeamLoader,
-    # "champions_league": ChampionsLeagueTeamLoader,  # à ajouter quand disponible
-    # "basketball": BasketballTeamLoader,              # à ajouter quand disponible
+    "cs2": CS2TeamLoader
 }
 
 

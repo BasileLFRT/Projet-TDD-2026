@@ -13,3 +13,4 @@ def test_champions_league_match_loader_returns_list_of_matches():
     assert isinstance(matches[0], Match)
     assert matches[0].team1 == "Young Boys"
     assert matches[0].score1 == 2
+    
