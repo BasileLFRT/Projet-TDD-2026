@@ -9,6 +9,7 @@ from src.Analysis.pandas.PlayerProfile import show_player_profile
 from src.Analysis.homemade.GoatFinder import find_the_goat
 from src.Analysis.pandas.GoatFinderStarcraft import find_the_goat_starcraft
 from src.Analysis.pandas.GoatFinderBasketball import find_the_goat_basketball
+from src.Analysis.pandas.GoatFinderVolleyball import find_the_goat_volleyball
 from src.Analysis.pandas.GoatFinderChess import find_the_goat_chess
 from src.Analysis.pandas.GoatFinderTennis import find_the_goat_tennis
 from src.Analysis.pandas.BestMatch import show_best_match
@@ -30,6 +31,7 @@ print("2 - Basketball")
 print("3 - Tennis")
 print("4 - StarCraft 2")
 print("5 - Chess")
+print("6 - Volleyball")
 choix_sport = input("Ton choix : ")
 
 if choix_sport == "1":
@@ -62,6 +64,16 @@ elif choix_sport == "4":
 elif choix_sport == "5":
     sport = Sport(nom="chess")
     competition = None
+elif choix_sport == "6":
+    sport = Sport(nom="volleyball")
+    print("Quelle compétition ?")
+    print("1 - Hommes")
+    print("2 - Femmes")
+    competition_choice = input("Ton choix : ")
+    if competition_choice == "1":
+        competition = Competition(id=5, nom="volleyball_men", sport="volleyball", annee=2024)
+    else:
+        competition = Competition(id=6, nom="volleyball_women", sport="volleyball", annee=2024)
 
 matches = MatchLoader().load_all_matches(sport, competition)
 
@@ -75,6 +87,10 @@ elif sport.nom == "starcraft_2":
     matches_df = pd.read_csv("./data/starcraft_2/match.csv")
 elif sport.nom == "chess":
     matches_df = pd.read_csv("./data/chess/match.csv")
+elif sport.nom == "volleyball" and competition.nom == "volleyball_men":
+    matches_df = pd.read_csv("./data/volleyball/match_men.csv")
+elif sport.nom == "volleyball" and competition.nom == "volleyball_women":
+    matches_df = pd.read_csv("./data/volleyball/match_women.csv")
 else: #basketball
     matches_df = pd.read_csv("./data/basketball/game.csv")
 
@@ -88,6 +104,10 @@ elif sport.nom == "starcraft_2":
     players_df = pd.read_csv("./data/starcraft_2/player.csv")
 elif sport.nom == "chess":
     players_df = pd.read_csv("./data/chess/player.csv")
+elif sport.nom == "volleyball" and competition.nom == "volleyball_men":
+    players_df = pd.read_csv("./data/volleyball/player_men.csv")
+elif sport.nom == "volleyball" and competition.nom == "volleyball_women":
+    players_df = pd.read_csv("./data/volleyball/player_women.csv")
 else: #basketball
     players_df = pd.read_csv("./data/basketball/player.csv")
 
@@ -254,6 +274,8 @@ elif choix_regarder == "3":
             the_goat = find_the_goat_starcraft(players_df, matches_df)
         elif sport.nom == "chess":
             the_goat = find_the_goat_chess(players_df, matches_df)
+        elif sport.nom == "volleyball":
+            the_goat = find_the_goat_volleyball(players_df, matches_df, competition)
         else:
             setting = input("Choisis, 0=pandas, 1=à_la_main\n")
             if setting == "0":

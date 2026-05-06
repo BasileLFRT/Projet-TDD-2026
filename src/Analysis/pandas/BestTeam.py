@@ -38,6 +38,23 @@ def show_best_team(matches_df: pd.DataFrame, sport: Sport, competition: Competit
         best = max(wins, key=wins.get)
         print(f"\nMeilleure équipe : {best} ({wins[best]} victoires)")
 
+    elif sport.nom == "volleyball":
+        if competition.nom == "volleyball_men":
+            team1_col, team2_col = "country_code_1", "country_code_2"
+        else:
+            team1_col, team2_col = "country_1", "country_2"
+        for _, row in matches_df.iterrows():
+            t1, t2 = row[team1_col], row[team2_col]
+            s1, s2 = int(row["set_country_1"]), int(row["set_country_2"])
+            wins.setdefault(t1, 0)
+            wins.setdefault(t2, 0)
+            if s1 > s2:
+                wins[t1] += 1
+            elif s2 > s1:
+                wins[t2] += 1
+        best = max(wins, key=wins.get)
+        print(f"\nMeilleure équipe : {best} ({wins[best]} victoires)")
+
     else:  # basketball
         for _, row in matches_df.iterrows():
             home = row["team_id_home"]

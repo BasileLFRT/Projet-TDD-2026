@@ -49,6 +49,28 @@ def show_team_matches(matches_df: pd.DataFrame, sport: Sport, competition: Compe
         for _, match in team_matches.iterrows():
             print(f"{match['date']} | {match['team_home']} {int(match['score_team_home'])} - {int(match['score_team_away'])} {match['team_away']}")
 
+    elif sport.nom == "volleyball":
+        if competition.nom == "volleyball_men":
+            team1_col, team2_col = "country_code_1", "country_code_2"
+        else:
+            team1_col, team2_col = "country_1", "country_2"
+        teams = sorted(set(matches_df[team1_col].tolist() + matches_df[team2_col].tolist()))
+        if choix_recherche == "1":
+            search_string = input("Nom de l'équipe : ")
+            results = [t for t in teams if search_string.lower() in t.lower()]
+            if len(results) == 0:
+                raise ValueError(f"Aucune équipe trouvée avec le nom '{search_string}'")
+            team = results[0] if len(results) == 1 else results[int(input("Ton choix : "))]
+        else:
+            for i, team in enumerate(teams):
+                print(f"{i} - {team}")
+            team = teams[int(input("Sélectionne une équipe (numéro) : "))]
+
+        team_matches = matches_df[(matches_df[team1_col] == team) | (matches_df[team2_col] == team)]
+        for _, match in team_matches.iterrows():
+            print(f"{match['date']} | {match[team1_col]} {int(match['set_country_1'])} - {int(match['set_country_2'])} {match[team2_col]}")
+        return 
+
     else:  # basketball
         teams_df = pd.read_csv("./data/basketball/team.csv")
         team_name = get_team_name(teams_df, "full_name")

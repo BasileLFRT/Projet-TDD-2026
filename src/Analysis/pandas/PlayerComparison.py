@@ -80,6 +80,32 @@ def show_player_comparison(players_df, matches_df, sport: Sport, competition: Co
         print(f"{'Matchs joués':<20} {str(total1):<25} {str(total2):<25}")
         print(f"{'Victoires':<20} {str(wins1):<25} {str(wins2):<25}")
 
+    elif sport.nom == "volleyball":
+        name1 = p1["name"]
+        name2 = p2["name"]
+        country1 = p1["country_code"]
+        country2 = p2["country_code"]
+        if competition.nom == "volleyball_men":
+            team1_col, team2_col = "country_code_1", "country_code_2"
+        else:
+            team1_col, team2_col = "country_1", "country_2"
+        def count_wins(country):
+            m = matches_df[(matches_df[team1_col] == country) | (matches_df[team2_col] == country)]
+            return len(m[
+                ((m[team1_col] == country) & (m["set_country_1"] > m["set_country_2"])) |
+                ((m[team2_col] == country) & (m["set_country_2"] > m["set_country_1"]))
+            ])
+        wins1 = count_wins(country1)
+        wins2 = count_wins(country2)
+        total1 = len(matches_df[(matches_df[team1_col] == country1) | (matches_df[team2_col] == country1)])
+        total2 = len(matches_df[(matches_df[team1_col] == country2) | (matches_df[team2_col] == country2)])
+        print(f"\n{'Stat':<20} {name1:<25} {name2:<25}")
+        print("-" * 70)
+        print(f"{'Pays':<20} {country1:<25} {country2:<25}")
+        print(f"{'Taille':<20} {str(p1['height']):<25} {str(p2['height']):<25}")
+        print(f"{'Matchs joués':<20} {str(total1):<25} {str(total2):<25}")
+        print(f"{'Victoires':<20} {str(wins1):<25} {str(wins2):<25}")
+
     else:  # basketball
         name1 = f"{p1['first_name']} {p1['last_name']}"
         name2 = f"{p2['first_name']} {p2['last_name']}"

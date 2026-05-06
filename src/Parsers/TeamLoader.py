@@ -6,13 +6,17 @@ from .adapters.LoLTeamLoader import LoLTeamLoader
 from .adapters.ChampionsLeagueTeamLoader import ChampionsLeagueTeamLoader
 from .adapters.BasketballTeamLoader import BasketballTeamLoader
 from .adapters.CS2TeamLoader import CS2TeamLoader
+from .adapters.VolleyballMenTeamLoader import VolleyballMenTeamLoader
+from .adapters.VolleyballWomenTeamLoader import VolleyballWomenTeamLoader
 
 team_loaders_by_competition = {
     "european_leagues": FootballTeamLoader,
     "champions_league": ChampionsLeagueTeamLoader,
     "basketball": BasketballTeamLoader,
     "lol": LoLTeamLoader,
-    "cs2": CS2TeamLoader
+    "cs2": CS2TeamLoader,
+    "volleyball_men": VolleyballMenTeamLoader,
+    "volleyball_women": VolleyballWomenTeamLoader
 }
 
 

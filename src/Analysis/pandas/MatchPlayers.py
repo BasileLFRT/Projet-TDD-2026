@@ -13,6 +13,15 @@ def show_match_players(matches: list[Match], sport: Sport, competition: Competit
     if sport.nom == "tennis":
         csv_folder = "./data/tennis"
         match_file = f"{competition.nom}_matches_2024.csv"
+    elif sport.nom == "volleyball":
+        csv_folder = "./data/volleyball"
+        match_file = "match_men.csv" if competition.nom == "volleyball_men" else "match_women.csv"
+    elif sport.nom == "starcraft_2":
+        csv_folder = "./data/starcraft_2"
+        match_file = "match.csv"
+    elif sport.nom == "chess":
+        csv_folder = "./data/chess"
+        match_file = "match.csv"
     elif competition is not None:
         csv_folder = f"./data/football_{competition.nom}"
         match_file = "match.csv"
@@ -21,8 +30,13 @@ def show_match_players(matches: list[Match], sport: Sport, competition: Competit
         match_file = "game.csv"
 
     matches_df = pd.read_csv(f"{csv_folder}/{match_file}")
-    players_df = pd.read_csv(f"{csv_folder}/player.csv" if sport.nom != "tennis" else f"{csv_folder}/{competition.nom}_players_2024.csv")
-
+    if sport.nom == "tennis":
+        players_df = pd.read_csv(f"{csv_folder}/{competition.nom}_players_2024.csv")
+    elif sport.nom == "volleyball":
+        players_df = pd.read_csv("./data/volleyball/player_men.csv" if competition.nom == "volleyball_men" else "./data/volleyball/player_women.csv")
+    else:
+        players_df = pd.read_csv(f"{csv_folder}/player.csv")
+    
     if competition and competition.nom == "european_leagues":
         player_cols = [f"home_player_{i}" for i in range(1, 12)] + [f"away_player_{i}" for i in range(1, 12)]
         match_row = matches_df[matches_df["match_api_id"] == int(match_choisi.match_id)].iloc[0]
@@ -43,6 +57,10 @@ def show_match_players(matches: list[Match], sport: Sport, competition: Competit
         print(f"  {match_choisi.team1}")
         print(f"  {match_choisi.team2}")
         return
+    elif sport.nom == "volleyball":
+        players_in_match = players_df[players_df["country_code"].isin([match_choisi.team1, match_choisi.team2])]
+        for _, player in players_in_match.iterrows():
+            print(f"{player['name']} ({player['country_code']})")
     else: #basketball
         players_in_match = players_df[players_df["team_id"].isin([int(match_choisi.team1), int(match_choisi.team2)])]
         for _, player in players_in_match.iterrows():

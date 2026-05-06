@@ -74,6 +74,22 @@ def show_player_matches(players_df, matches, sport: Sport, competition: Competit
         for _, match in player_matches.iterrows():
             print(f"Round {match['round']} | {match['player_1']} {match['score_player_1']} - {match['score_player_2']} {match['player_2']}")
 
+    elif sport.nom == "volleyball":
+        if len(players_df) == 1:
+            index = players_df.index[0]
+        else:
+            for i, row in players_df.iterrows():
+                print(f"{i} - {row['name']} ({row['country_code']})")
+            index = int(input("Sélectionne un joueur (numéro) : "))
+        country = players_df.loc[index]["country_code"]
+        if competition.nom == "volleyball_men":
+            team1_col, team2_col = "country_code_1", "country_code_2"
+        else:
+            team1_col, team2_col = "country_1", "country_2"
+        player_matches = matches_df[(matches_df[team1_col] == country) | (matches_df[team2_col] == country)]
+        for _, match in player_matches.iterrows():
+            print(f"{match['date']} | {match[team1_col]} {int(match['set_country_1'])} - {int(match['set_country_2'])} {match[team2_col]}")
+
     else:  # basketball
         players_df["full_name"] = players_df["first_name"] + " " + players_df["last_name"]
         if len(players_df) == 1:
