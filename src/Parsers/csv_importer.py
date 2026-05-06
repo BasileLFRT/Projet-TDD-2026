@@ -1,6 +1,11 @@
 import csv
 
 class CsvImporter:
+    """Permet de lire les fichiers csv extérieur
+    
+    Convertit les CSV en liste de dictionnaires,
+    où chaque dict est une ligne de csv
+    """
     def __init__(self, filepath: str):
         self.filepath = filepath
 

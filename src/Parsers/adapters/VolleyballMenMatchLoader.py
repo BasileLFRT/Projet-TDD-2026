@@ -2,7 +2,20 @@ import csv
 from src.Model.Match import Match
 
 class VolleyballMenMatchLoader:
+    """Charge les données des matchs de volleyball masculin à partir d'un CSV
+    
+    Utilise les colonnes date, country_code_1, country_code_2, set_country_1 et set_country_2 du CSV
+    pour créer des instances de Match
+    """
     def load_all_matches(self) -> list[Match]:
+        """ Transforme les données du CSV en une liste d'instances de Match
+        
+        Returns:
+            list[Match]: une liste d'instances de Match créées à partir des données du CSV
+        
+        Raises:
+            FileNotFoundError: si le fichier CSV n'est pas trouvable
+            KeyError: si des colonnes sont manquantes"""
         liste_matchs = []
         with open('./data/volleyball/match_men.csv', newline='') as csvfile:
             reader = csv.DictReader(csvfile)

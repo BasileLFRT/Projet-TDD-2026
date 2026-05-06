@@ -1,6 +1,10 @@
 import csv
 
 class CsvExporter:
+    """Permet d'écrire des fichiers csv extérieur
+    
+    Convertit une liste de dictionnaires en CSV,
+    où chaque dict est une ligne de csv"""
     def __init__(self, filepath: str):
         self.filepath = filepath
 
