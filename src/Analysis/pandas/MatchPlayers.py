@@ -38,7 +38,12 @@ def show_match_players(matches: list[Match], sport: Sport, competition: Competit
         players_in_match = players_df[players_df["player_id"].astype(str).isin([match_choisi.team1, match_choisi.team2])]
         for _, player in players_in_match.iterrows():
             print(f"{player['name_first']} {player['name_last']}")
-    else:
+    elif sport.nom in ["chess", "starcraft_2"]:
+        print(f"\nJoueurs du match :")
+        print(f"  {match_choisi.team1}")
+        print(f"  {match_choisi.team2}")
+        return
+    else: #basketball
         players_in_match = players_df[players_df["team_id"].isin([int(match_choisi.team1), int(match_choisi.team2)])]
         for _, player in players_in_match.iterrows():
             print(f"{player['first_name']} {player['last_name']}")

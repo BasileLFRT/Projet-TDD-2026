@@ -7,8 +7,9 @@ from src.Analysis.pandas.GoatFinderCL import find_the_goat_cl
 from src.Analysis.pandas.PlayerMatches import show_player_matches
 from src.Analysis.pandas.PlayerProfile import show_player_profile
 from src.Analysis.homemade.GoatFinder import find_the_goat
-from src.Analysis.pandas.GoatFinderStarCraft import find_the_goat_starcraft
+from src.Analysis.pandas.GoatFinderStarcraft import find_the_goat_starcraft
 from src.Analysis.pandas.GoatFinderBasketball import find_the_goat_basketball
+from src.Analysis.pandas.GoatFinderChess import find_the_goat_chess
 from src.Analysis.pandas.GoatFinderTennis import find_the_goat_tennis
 from src.Analysis.pandas.BestMatch import show_best_match
 from src.Analysis.pandas.TeamMatches import show_team_matches
@@ -28,6 +29,7 @@ print("1 - Football")
 print("2 - Basketball")
 print("3 - Tennis")
 print("4 - StarCraft 2")
+print("5 - Chess")
 choix_sport = input("Ton choix : ")
 
 if choix_sport == "1":
@@ -57,6 +59,9 @@ elif choix_sport == "3":
 elif choix_sport == "4":
     sport = Sport(nom="starcraft_2")
     competition = None
+elif choix_sport == "5":
+    sport = Sport(nom="chess")
+    competition = None
 
 matches = MatchLoader().load_all_matches(sport, competition)
 
@@ -68,7 +73,9 @@ elif sport.nom == "tennis":
     matches_df = pd.read_csv(f"./data/tennis/{competition.nom}_matches_2024.csv")
 elif sport.nom == "starcraft_2":
     matches_df = pd.read_csv("./data/starcraft_2/match.csv")
-else:
+elif sport.nom == "chess":
+    matches_df = pd.read_csv("./data/chess/match.csv")
+else: #basketball
     matches_df = pd.read_csv("./data/basketball/game.csv")
 
 if competition is not None and competition.nom == "champions_league":
@@ -79,7 +86,9 @@ elif sport.nom == "tennis":
     players_df = pd.read_csv(f"./data/tennis/{competition.nom}_players_2024.csv")
 elif sport.nom == "starcraft_2":
     players_df = pd.read_csv("./data/starcraft_2/player.csv")
-else:
+elif sport.nom == "chess":
+    players_df = pd.read_csv("./data/chess/player.csv")
+else: #basketball
     players_df = pd.read_csv("./data/basketball/player.csv")
 
 print("Qu'est-ce que tu veux regarder ?")
@@ -91,8 +100,8 @@ choix_regarder = input("Ton choix : ")
 #Matchs
 if choix_regarder == "1":
     print("Qu'est-ce que tu veux faire?")
-    print("1 - Voir les matchs")
-    print("2 - Voire les matchs d'une équipe")
+    print("1 - Voir les matchs et leurs joueurs")
+    print("2 - Voir les matchs d'une équipe")
     print("3 - Voir le meilleur match")
     choix_match = input("Ton choix : ")
 
@@ -122,19 +131,44 @@ elif choix_regarder == "2":
         choix_recherche = input("Ton choix : ")
 
         if choix_recherche == "1":
-            from src.Analysis.PlayerSearch import PlayerSearch
             search_string = input("Nom du joueur : ")
-            # convertir players_df en liste de Player pour PlayerSearch
-            from src.Parsers.PlayerLoader import PlayerLoader
             players_list = PlayerLoader().load_all_players(sport, competition)
             results = PlayerSearch().filter_players_by_full_name(players_list, search_string)
-            for i, p in enumerate(results):
-                print(f"{i} - {p.nom}")
+            if len(results) == 0:
+                print(f"Aucun joueur trouvé avec le nom '{search_string}' dans la base de données.")
+                search_string = input("Réessaie avec un autre nom (ou appuie sur Entrée pour choisir dans la liste) : ")
+                if search_string == "":
+                    choix_recherche = "2"
+                else:
+                    results = PlayerSearch().filter_players_by_full_name(players_list, search_string)
+                    if len(results) == 0:
+                        raise ValueError(f"Aucun joueur trouvé avec le nom '{search_string}'.")
+
+            if choix_recherche == "1" and len(results) > 0:
+                if len(results) == 1:
+                    players_df = players_df[players_df.apply(
+                        lambda row: results[0].nom in str(row.values), axis=1
+                    )]
+                else:
+                    for i, p in enumerate(results):
+                        print(f"{i} - {p.nom}")
+                    index = int(input("Ton choix : "))
+                    players_df = players_df[players_df.apply(
+                        lambda row: results[index].nom in str(row.values), axis=1
+                    )]
+
+        if choix_recherche == "2":
+            for i, row in players_df.iterrows():
+                if sport.nom == "tennis":
+                    print(f"{i} - {row['name_first']} {row['name_last']}")
+                elif sport.nom == "basketball":
+                    print(f"{i} - {row['first_name']} {row['last_name']}")
+                elif sport.nom in ["starcraft_2", "chess"]:
+                    print(f"{i} - {row['name']}")
+                else:
+                    print(f"{i} - {row['player_name']}")
             index = int(input("Ton choix : "))
-            # filtrer players_df sur le joueur choisi
-            players_df = players_df[players_df.apply(
-                lambda row: results[index].nom in str(row.values), axis=1
-            )]
+            players_df = players_df.iloc[[index]]
 
         if choix_joueur == "1":
             show_player_matches(players_df, matches, sport, competition)
@@ -151,6 +185,25 @@ elif choix_regarder == "2":
                 search_string = input(f"Nom du {label} : ")
                 players_list = PlayerLoader().load_all_players(sport, competition)
                 results = PlayerSearch().filter_players_by_full_name(players_list, search_string)
+                if len(results) == 0:
+                    print("Aucun joueur trouvé avec ce nom.")
+                    search_string = input("Réessaie avec un autre nom (ou appuie sur Entrée pour choisir dans la liste) : ")
+                    if search_string == "":
+                        # basculer vers la liste
+                        for i, row in players_df.iterrows():
+                            if sport.nom == "tennis":
+                                print(f"{i} - {row['name_first']} {row['name_last']}")
+                            elif sport.nom == "basketball":
+                                print(f"{i} - {row['first_name']} {row['last_name']}")
+                            elif sport.nom in ["starcraft_2", "chess"]:
+                                print(f"{i} - {row['name']}")
+                            else:
+                                print(f"{i} - {row['player_name']}")
+                        return int(input("Ton choix : "))
+                    else:
+                        results = PlayerSearch().filter_players_by_full_name(players_list, search_string)
+                        if len(results) == 0:
+                            raise ValueError(f"Aucun joueur trouvé avec le nom '{search_string}' dans la base de données.")
                 if len(results) == 1:
                     nom = results[0].nom
                 else:
@@ -171,6 +224,8 @@ elif choix_regarder == "2":
                         print(f"{i} - {row['name_first']} {row['name_last']}")
                     elif sport.nom == "basketball":
                         print(f"{i} - {row['first_name']} {row['last_name']}")
+                    elif sport.nom in ["starcraft_2", "chess"]:
+                        print(f"{i} - {row['name']}")
                     else:
                         print(f"{i} - {row['player_name']}")
                 return int(input("Ton choix : "))
@@ -197,6 +252,8 @@ elif choix_regarder == "3":
             the_goat = find_the_goat_tennis(players_df, competition.nom)
         elif sport.nom == "starcraft_2":
             the_goat = find_the_goat_starcraft(players_df, matches_df)
+        elif sport.nom == "chess":
+            the_goat = find_the_goat_chess(players_df, matches_df)
         else:
             setting = input("Choisis, 0=pandas, 1=à_la_main\n")
             if setting == "0":

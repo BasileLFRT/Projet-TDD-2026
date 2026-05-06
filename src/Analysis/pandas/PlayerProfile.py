@@ -5,10 +5,13 @@ from src.Model.Sport import Sport
 def show_player_profile(players_df, sport: Sport, competition: Competition = None):
     if sport.nom == "tennis":
         players_df["full_name"] = players_df["name_first"] + " " + players_df["name_last"]
-        for i, row in players_df.iterrows():
-            print(f"{i} - {row['full_name']}")
-        index = int(input("Sélectionne un joueur (numéro) : "))
-        p = players_df.iloc[index]
+        if len(players_df) == 1:
+            index = players_df.index[0]
+        else:
+            for i, row in players_df.iterrows():
+                print(f"{i} - {row['full_name']}")
+            index = int(input("Sélectionne un joueur (numéro) : "))
+        p = players_df.loc[index]
         player_id = str(p["player_id"])
         matches_df = pd.read_csv(f"./data/tennis/{competition.nom}_matches_2024.csv")
         played = matches_df[(matches_df["winner_id"].astype(str) == player_id) | (matches_df["loser_id"].astype(str) == player_id)]
@@ -26,10 +29,13 @@ def show_player_profile(players_df, sport: Sport, competition: Competition = Non
     elif competition and competition.nom == "european_leagues":
         teams_df = pd.read_csv("./data/football_european_leagues/team.csv")
         matches_df = pd.read_csv("./data/football_european_leagues/match.csv")
-        for i, row in players_df.iterrows():
-            print(f"{i} - {row['player_name']}")
-        index = int(input("Sélectionne un joueur (numéro) : "))
-        p = players_df.iloc[index]
+        if len(players_df) == 1:
+            index = players_df.index[0]
+        else:
+            for i, row in players_df.iterrows():
+                print(f"{i} - {row['player_name']}")
+            index = int(input("Sélectionne un joueur (numéro) : "))
+        p = players_df.loc[index]
         player_id = p["player_api_id"]
         home_cols = [f"home_player_{i}" for i in range(1, 12)]
         away_cols = [f"away_player_{i}" for i in range(1, 12)]
@@ -57,10 +63,13 @@ def show_player_profile(players_df, sport: Sport, competition: Competition = Non
         print(f"  Matchs gagnés : {total_wins}")
 
     elif competition and competition.nom == "champions_league":
-        for i, row in players_df.iterrows():
-            print(f"{i} - {row['player_name']}")
-        index = int(input("Sélectionne un joueur (numéro) : "))
-        p = players_df.iloc[index]
+        if len(players_df) == 1:
+            index = players_df.index[0]
+        else:
+            for i, row in players_df.iterrows():
+                print(f"{i} - {row['player_name']}")
+            index = int(input("Sélectionne un joueur (numéro) : "))
+        p = players_df.loc[index]
         matches_df = pd.read_csv("./data/football_champions_league/match.csv")
         club = p["club"]
         home_matches = matches_df[matches_df["team_home"] == club]
@@ -78,13 +87,66 @@ def show_player_profile(players_df, sport: Sport, competition: Competition = Non
         print(f"  Passes : {p['assists']}")
         print(f"  Minutes jouées : {p['minutes_played']}")
 
+    elif sport.nom == "starcraft_2":
+        for i, row in players_df.iterrows():
+            print(f"{i} - {row['name']}")
+        if len(players_df) == 1:
+            index = players_df.index[0]
+        else:
+            for i, row in players_df.iterrows():
+                print(f"{i} - {row['name']}")
+            index = int(input("Sélectionne un joueur (numéro) : "))
+        p = players_df.loc[index]
+        matches_df = pd.read_csv("./data/starcraft_2/match.csv")
+        played = matches_df[(matches_df["player_1"] == p["pseudo"]) | (matches_df["player_2"] == p["pseudo"])]
+        wins = played[((played["player_1"] == p["pseudo"]) & (played["score_player_1"] > played["score_player_2"])) |
+                      ((played["player_2"] == p["pseudo"]) & (played["score_player_2"] > played["score_player_1"]))]
+        print(f"\n--- {p['name']} ({p['pseudo']}) ---")
+        print("\nInfos personnelles :")
+        print(f"  Nationalité : {p['nationality']}")
+        print(f"  Date de naissance : {p['birthdate']}")
+        print(f"\nÉquipe :")
+        print(f"  Team : {p['team']}")
+        print(f"\nStats :")
+        print(f"  Race : {p['race']}")
+        print(f"  Matchs joués : {len(played)}")
+        print(f"  Matchs gagnés : {len(wins)}")
+
+    elif sport.nom == "chess":
+        if len(players_df) == 1:
+            index = players_df.index[0]
+        else:
+            for i, row in players_df.iterrows():
+                print(f"{i} - {row['name']}")
+            index = int(input("Sélectionne un joueur (numéro) : "))
+        p = players_df.loc[index]
+        matches_df = pd.read_csv("./data/chess/match.csv")
+        played = matches_df[(matches_df["player_1"] == p["name"]) | (matches_df["player_2"] == p["name"])]
+        wins = played[((played["player_1"] == p["name"]) & (pd.to_numeric(played["score_player_1"], errors='coerce') > pd.to_numeric(played["score_player_2"], errors='coerce'))) |
+                      ((played["player_2"] == p["name"]) & (pd.to_numeric(played["score_player_2"], errors='coerce') > pd.to_numeric(played["score_player_1"], errors='coerce')))]
+        print(f"\n--- {p['name']} ---")
+        print("\nInfos personnelles :")
+        print(f"  Année de naissance : {p['birth_year']}")
+        print(f"  Genre : {p['gender']}")
+        print(f"  Fédération : {p['federation']}")
+        print("\nStats :")
+        print(f"  Titre FIDE : {p['fide_title']}")
+        print(f"  Rating standard : {p['rating_standard']}")
+        print(f"  Rating rapide : {p['rating_rapid']}")
+        print(f"  Rating blitz : {p['rating_blitz']}")
+        print(f"  Matchs joués : {len(played)}")
+        print(f"  Matchs gagnés : {len(wins)}")
+
     else:  # basketball
         teams_df = pd.read_csv("./data/basketball/team.csv")
         players_df["full_name"] = players_df["first_name"] + " " + players_df["last_name"]
-        for i, row in players_df.iterrows():
-            print(f"{i} - {row['full_name']}")
-        index = int(input("Sélectionne un joueur (numéro) : "))
-        p = players_df.iloc[index]
+        if len(players_df) == 1:
+            index = players_df.index[0]
+        else:
+            for i, row in players_df.iterrows():
+                print(f"{i} - {row['full_name']}")
+            index = int(input("Sélectionne un joueur (numéro) : "))
+        p = players_df.loc[index]
         games_df = pd.read_csv("./data/basketball/game.csv")
         team_id_val = p["team_id"]
         home_matches = games_df[games_df["team_id_home"] == team_id_val]

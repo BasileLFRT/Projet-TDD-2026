@@ -1,5 +1,6 @@
 import csv
 from src.Model.Match import Match
+import pandas as pd
 
 class ChessMatchLoader:
     def load_all_matches(self) -> list[Match]:
@@ -12,9 +13,9 @@ class ChessMatchLoader:
                     date=None,
                     team1=row.get("player_1"),
                     team2=row.get("player_2"),
-                    score1=float(row.get("score_player_1") or 0),
-                    score2=float(row.get("score_player_2") or 0),
-                )
+                    score1=float(pd.to_numeric(row.get("score_player_1"), errors='coerce') or 0),
+                    score2=float(pd.to_numeric(row.get("score_player_2"), errors='coerce') or 0),
+                    )
                 liste_matchs.append(match)
         return liste_matchs
 

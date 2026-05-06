@@ -15,8 +15,8 @@ def show_score_evolution(matches_df: pd.DataFrame, sport: Sport, competition: Co
             players_df = pd.read_csv("./data/badminton/player.csv")
             name_col = "name"
         else:
-            players_df = pd.read_csv("./data/starcraft_2/player.csv") if os.path.exists("./data/starcraft_2/player.csv") else None
-            name_col = "name"
+            players_df = pd.read_csv("./data/starcraft_2/player.csv")
+            name_col = "pseudo"
 
         for i, row in players_df.iterrows():
             print(f"{i} - {row[name_col]}")
@@ -28,8 +28,10 @@ def show_score_evolution(matches_df: pd.DataFrame, sport: Sport, competition: Co
                 (matches_df["player_1"] == player_name) |
                 (matches_df["player_2"] == player_name)
             ].copy()
-            player_matches["win"] = (player_matches["player_1"] == player_name) & (player_matches["score_player_1"] > player_matches["score_player_2"])
-            player_matches["win"] = player_matches["win"] | ((player_matches["player_2"] == player_name) & (player_matches["score_player_2"] > player_matches["score_player_1"]))
+            s1 = pd.to_numeric(player_matches["score_player_1"], errors='coerce')
+            s2 = pd.to_numeric(player_matches["score_player_2"], errors='coerce')
+            player_matches["win"] = ((player_matches["player_1"] == player_name) & (s1 > s2)) | \
+                ((player_matches["player_2"] == player_name) & (s2 > s1))
         elif sport.nom == "badminton":
             player_matches = matches_df[
                 (matches_df["player_1"] == player_name) |
@@ -41,9 +43,11 @@ def show_score_evolution(matches_df: pd.DataFrame, sport: Sport, competition: Co
                 (matches_df["player_1"] == player_name) |
                 (matches_df["player_2"] == player_name)
             ].copy()
-            player_matches["win"] = (player_matches["player_1"] == player_name) & (player_matches["score_player_1"] > player_matches["score_player_2"])
-            player_matches["win"] = player_matches["win"] | ((player_matches["player_2"] == player_name) & (player_matches["score_player_2"] > player_matches["score_player_1"]))
-
+            s1 = pd.to_numeric(player_matches["score_player_1"], errors='coerce')
+            s2 = pd.to_numeric(player_matches["score_player_2"], errors='coerce')
+            player_matches["win"] = ((player_matches["player_1"] == player_name) & (s1 > s2)) | \
+                ((player_matches["player_2"] == player_name) & (s2 > s1))
+                
         player_matches["win"] = player_matches["win"].astype(int)
         player_matches["cumulative_wins"] = player_matches["win"].cumsum()
 

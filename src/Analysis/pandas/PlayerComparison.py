@@ -46,6 +46,40 @@ def show_player_comparison(players_df, matches_df, sport: Sport, competition: Co
         print(f"{'Matchs joués':<20} {str(total1):<25} {str(total2):<25}")
         print(f"{'Victoires':<20} {str(wins1):<25} {str(wins2):<25}")
 
+    elif sport.nom == "starcraft_2":
+        name1 = p1["name"]
+        name2 = p2["name"]
+        wins1 = len(matches_df[((matches_df["player_1"] == name1) & (matches_df["score_player_1"] > matches_df["score_player_2"])) |
+                               ((matches_df["player_2"] == name1) & (matches_df["score_player_2"] > matches_df["score_player_1"]))])
+        wins2 = len(matches_df[((matches_df["player_1"] == name2) & (matches_df["score_player_1"] > matches_df["score_player_2"])) |
+                               ((matches_df["player_2"] == name2) & (matches_df["score_player_2"] > matches_df["score_player_1"]))])
+        total1 = len(matches_df[(matches_df["player_1"] == name1) | (matches_df["player_2"] == name1)])
+        total2 = len(matches_df[(matches_df["player_1"] == name2) | (matches_df["player_2"] == name2)])
+        print(f"\n{'Stat':<20} {name1:<25} {name2:<25}")
+        print("-" * 70)
+        print(f"{'Nationalité':<20} {str(p1['nationality']):<25} {str(p2['nationality']):<25}")
+        print(f"{'Race':<20} {str(p1['race']):<25} {str(p2['race']):<25}")
+        print(f"{'Team':<20} {str(p1['team']):<25} {str(p2['team']):<25}")
+        print(f"{'Matchs joués':<20} {str(total1):<25} {str(total2):<25}")
+        print(f"{'Victoires':<20} {str(wins1):<25} {str(wins2):<25}")
+
+    elif sport.nom == "chess":
+        name1 = p1["name"]
+        name2 = p2["name"]
+        wins1 = len(matches_df[((matches_df["player_1"] == name1) & (pd.to_numeric(matches_df["score_player_1"], errors='coerce') > pd.to_numeric(matches_df["score_player_2"], errors='coerce'))) |
+                               ((matches_df["player_2"] == name1) & (pd.to_numeric(matches_df["score_player_2"], errors='coerce') > pd.to_numeric(matches_df["score_player_1"], errors='coerce')))])
+        wins2 = len(matches_df[((matches_df["player_1"] == name2) & (pd.to_numeric(matches_df["score_player_1"], errors='coerce') > pd.to_numeric(matches_df["score_player_2"], errors='coerce'))) |
+                               ((matches_df["player_2"] == name2) & (pd.to_numeric(matches_df["score_player_2"], errors='coerce') > pd.to_numeric(matches_df["score_player_1"], errors='coerce')))])
+        total1 = len(matches_df[(matches_df["player_1"] == name1) | (matches_df["player_2"] == name1)])
+        total2 = len(matches_df[(matches_df["player_1"] == name2) | (matches_df["player_2"] == name2)])
+        print(f"\n{'Stat':<20} {name1:<25} {name2:<25}")
+        print("-" * 70)
+        print(f"{'Fédération':<20} {str(p1['federation']):<25} {str(p2['federation']):<25}")
+        print(f"{'Titre FIDE':<20} {str(p1['fide_title']):<25} {str(p2['fide_title']):<25}")
+        print(f"{'Rating std':<20} {str(p1['rating_standard']):<25} {str(p2['rating_standard']):<25}")
+        print(f"{'Matchs joués':<20} {str(total1):<25} {str(total2):<25}")
+        print(f"{'Victoires':<20} {str(wins1):<25} {str(wins2):<25}")
+
     else:  # basketball
         name1 = f"{p1['first_name']} {p1['last_name']}"
         name2 = f"{p2['first_name']} {p2['last_name']}"

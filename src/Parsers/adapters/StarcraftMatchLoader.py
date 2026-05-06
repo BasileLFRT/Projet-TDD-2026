@@ -36,8 +36,8 @@ class StarcraftMatchLoader:
                     date=row.get("date"),
                     team1=row.get("player_1"),
                     team2=row.get("player_2"),
-                    score1=int(row.get("score_player_1") or 0),
-                    score2=int(row.get("score_player_2") or 0),
+                    score1=1 if row.get("score_player_1") == "W" else (0 if row.get("score_player_1") == "L" else int(row.get("score_player_1") or 0)),
+                    score2=1 if row.get("score_player_2") == "W" else (0 if row.get("score_player_2") == "L" else int(row.get("score_player_2") or 0)),
                 )
                 liste_matchs.append(match)
         return liste_matchs
