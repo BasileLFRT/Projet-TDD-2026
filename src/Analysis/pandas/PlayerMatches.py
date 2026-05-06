@@ -84,11 +84,35 @@ def show_player_matches(players_df, matches, sport: Sport, competition: Competit
         country = players_df.loc[index]["country_code"]
         if competition.nom == "volleyball_men":
             team1_col, team2_col = "country_code_1", "country_code_2"
+            matches_df = pd.read_csv("./data/volleyball/match_men.csv")
+            country_key = country  # codes courts, pas besoin de mapping
         else:
             team1_col, team2_col = "country_1", "country_2"
-        player_matches = matches_df[(matches_df[team1_col] == country) | (matches_df[team2_col] == country)]
+            matches_df = pd.read_csv("./data/volleyball/match_women.csv")
+            country_mapping = {
+                "ARG": "Argentina", "BRA": "Brazil", "CAN": "Canada", "CHN": "China",
+                "DOM": "Dominican Republic", "EGY": "Egypt", "FRA": "France",
+                "GER": "Germany", "ITA": "Italy", "JPN": "Japan", "KEN": "Kenya",
+                "NED": "Netherlands", "POL": "Poland", "SLO": "Slovenia",
+                "SRB": "Serbia", "TUR": "Türkiye", "USA": "United States"
+            }
+            country_key = country_mapping.get(country, country)
+        player_matches = matches_df[(matches_df[team1_col] == country_key) | (matches_df[team2_col] == country_key)]
         for _, match in player_matches.iterrows():
             print(f"{match['date']} | {match[team1_col]} {int(match['set_country_1'])} - {int(match['set_country_2'])} {match[team2_col]}")
+
+    elif sport.nom == "badminton":
+        if len(players_df) == 1:
+            index = players_df.index[0]
+        else:
+            for i, row in players_df.iterrows():
+                print(f"{i} - {row['name']}")
+            index = int(input("Sélectionne un joueur (numéro) : "))
+        player_name = players_df.loc[index]["name"]
+        matches_df = pd.read_csv("./data/badminton/match.csv")
+        player_matches = matches_df[(matches_df["player_1"] == player_name) | (matches_df["player_2"] == player_name)]
+        for _, match in player_matches.iterrows():
+            print(f"{match['date']} | {match['tournament']} | {match['player_1']} vs {match['player_2']} | {match['game_1_score']} {match['game_2_score']} {match['game_3_score'] if pd.notna(match['game_3_score']) else ''}")
 
     else:  # basketball
         players_df["full_name"] = players_df["first_name"] + " " + players_df["last_name"]

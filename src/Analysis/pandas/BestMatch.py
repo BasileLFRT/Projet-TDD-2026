@@ -40,6 +40,17 @@ def show_best_match(matches_df: pd.DataFrame, sport: Sport, competition: Competi
         print(f"  {best['date']} | {best['player_1']} vs {best['player_2']}")
         print(f"  {best['game_1_score']} / {best['game_2_score']} / {best['game_3_score']}")
 
+    elif sport.nom == "volleyball":
+        if competition.nom == "volleyball_men":
+            team1_col, team2_col = "country_code_1", "country_code_2"
+        else:
+            team1_col, team2_col = "country_1", "country_2"
+        matches_df["total_sets"] = matches_df["set_country_1"] + matches_df["set_country_2"]
+        best = matches_df.loc[matches_df["total_sets"].idxmax()]
+        print(f"Match avec le plus de sets :")
+        print(f"  {best['date']} | {best[team1_col]} {int(best['set_country_1'])} - {int(best['set_country_2'])} {best[team2_col]}")
+        print(f"  Total de sets : {int(best['total_sets'])}")
+
     else:  # basketball
         matches_df["total_points"] = matches_df["pts_home"] + matches_df["pts_away"]
         best = matches_df.loc[matches_df["total_points"].idxmax()]

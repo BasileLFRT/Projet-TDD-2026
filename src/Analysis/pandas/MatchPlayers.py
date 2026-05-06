@@ -52,15 +52,36 @@ def show_match_players(matches: list[Match], sport: Sport, competition: Competit
         players_in_match = players_df[players_df["player_id"].astype(str).isin([match_choisi.team1, match_choisi.team2])]
         for _, player in players_in_match.iterrows():
             print(f"{player['name_first']} {player['name_last']}")
+    
     elif sport.nom in ["chess", "starcraft_2"]:
         print(f"\nJoueurs du match :")
         print(f"  {match_choisi.team1}")
         print(f"  {match_choisi.team2}")
         return
+
     elif sport.nom == "volleyball":
-        players_in_match = players_df[players_df["country_code"].isin([match_choisi.team1, match_choisi.team2])]
+        if competition.nom == "volleyball_men":
+            players_in_match = players_df[players_df["country_code"].isin([match_choisi.team1, match_choisi.team2])]
+        else:
+            country_mapping = {
+                "Argentina": "ARG", "Brazil": "BRA", "Canada": "CAN", "China": "CHN",
+                "Dominican Republic": "DOM", "Egypt": "EGY", "France": "FRA",
+                "Germany": "GER", "Italy": "ITA", "Japan": "JPN", "Kenya": "KEN",
+                "Netherlands": "NED", "Poland": "POL", "Slovenia": "SLO",
+                "Serbia": "SRB", "Türkiye": "TUR", "United States": "USA"
+            }
+            codes = [country_mapping.get(match_choisi.team1, match_choisi.team1),
+                     country_mapping.get(match_choisi.team2, match_choisi.team2)]
+            players_in_match = players_df[players_df["country_code"].isin(codes)]
         for _, player in players_in_match.iterrows():
             print(f"{player['name']} ({player['country_code']})")
+
+    elif sport.nom == "badminton":
+        print(f"\nJoueurs du match :")
+        print(f"  {match_choisi.team1}")
+        print(f"  {match_choisi.team2}")
+        return
+
     else: #basketball
         players_in_match = players_df[players_df["team_id"].isin([int(match_choisi.team1), int(match_choisi.team2)])]
         for _, player in players_in_match.iterrows():

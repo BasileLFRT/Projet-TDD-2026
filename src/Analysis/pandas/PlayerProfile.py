@@ -147,13 +147,23 @@ def show_player_profile(players_df, sport: Sport, competition: Competition = Non
         p = players_df.loc[index]
         if competition.nom == "volleyball_men":
             team1_col, team2_col = "country_code_1", "country_code_2"
+            matches_df = pd.read_csv("./data/volleyball/match_men.csv")
+            country_key = p["country_code"]
         else:
             team1_col, team2_col = "country_1", "country_2"
-        country = p["country_code"]
-        team_matches = matches_df[(matches_df[team1_col] == country) | (matches_df[team2_col] == country)]
+            matches_df = pd.read_csv("./data/volleyball/match_women.csv")
+            country_mapping = {
+                "ARG": "Argentina", "BRA": "Brazil", "CAN": "Canada", "CHN": "China",
+                "DOM": "Dominican Republic", "EGY": "Egypt", "FRA": "France",
+                "GER": "Germany", "ITA": "Italy", "JPN": "Japan", "KEN": "Kenya",
+                "NED": "Netherlands", "POL": "Poland", "SLO": "Slovenia",
+                "SRB": "Serbia", "TUR": "Türkiye", "USA": "United States"
+            }
+            country_key = country_mapping.get(p["country_code"], p["country_code"])
+        team_matches = matches_df[(matches_df[team1_col] == country_key) | (matches_df[team2_col] == country_key)]
         wins = len(team_matches[
-            ((team_matches[team1_col] == country) & (team_matches["set_country_1"] > team_matches["set_country_2"])) |
-            ((team_matches[team2_col] == country) & (team_matches["set_country_2"] > team_matches["set_country_1"]))
+            ((team_matches[team1_col] == country_key) & (team_matches["set_country_1"] > team_matches["set_country_2"])) |
+            ((team_matches[team2_col] == country_key) & (team_matches["set_country_2"] > team_matches["set_country_1"]))
         ])
         print(f"\n--- {p['name']} ---")
         print("\nInfos personnelles :")
@@ -165,6 +175,25 @@ def show_player_profile(players_df, sport: Sport, competition: Competition = Non
         print("\nStats :")
         print(f"  Matchs joués : {len(team_matches)}")
         print(f"  Matchs gagnés : {wins}")
+
+    elif sport.nom == "badminton":
+        if len(players_df) == 1:
+            index = players_df.index[0]
+        else:
+            for i, row in players_df.iterrows():
+                print(f"{i} - {row['name']}")
+            index = int(input("Sélectionne un joueur (numéro) : "))
+        p = players_df.loc[index]
+        matches_df = pd.read_csv("./data/badminton/match.csv")
+        played = matches_df[(matches_df["player_1"] == p["name"]) | (matches_df["player_2"] == p["name"])]
+        wins = played[played["winner"] == p["name"]]
+        print(f"\n--- {p['name']} ---")
+        print("\nInfos personnelles :")
+        print(f"  Pays : {p['country']}")
+        print(f"  Continent : {p['continent']}")
+        print("\nStats :")
+        print(f"  Matchs joués : {len(played)}")
+        print(f"  Matchs gagnés : {len(wins)}")
 
     else:  # basketball
         teams_df = pd.read_csv("./data/basketball/team.csv")

@@ -1,5 +1,4 @@
 from typing import List
-
 from src.Model.Player import Player
 from src.Model.Competition import Competition
 from src.Model.Sport import Sport

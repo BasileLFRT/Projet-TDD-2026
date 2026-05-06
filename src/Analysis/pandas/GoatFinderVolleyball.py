@@ -19,6 +19,17 @@ def find_the_goat_volleyball(players_df: pd.DataFrame, matches_df: pd.DataFrame,
         wins[t2] = wins.get(t2, 0) + (1 if s2 > s1 else 0)
 
     goat_country = max(wins, key=wins.get)
+
+    if competition.nom == "volleyball_women":
+        country_mapping = {
+            "Argentina": "ARG", "Brazil": "BRA", "Canada": "CAN", "China": "CHN",
+            "Dominican Republic": "DOM", "Egypt": "EGY", "France": "FRA",
+            "Germany": "GER", "Italy": "ITA", "Japan": "JPN", "Kenya": "KEN",
+            "Netherlands": "NED", "Poland": "POL", "Slovenia": "SLO",
+            "Serbia": "SRB", "Türkiye": "TUR", "United States": "USA"
+        }
+        goat_country = country_mapping.get(goat_country, goat_country)
+
     country_players = players_df[players_df["country_code"] == goat_country]
 
     if len(country_players) == 0:

@@ -12,4 +12,5 @@ class PlayerSearch:
         self, players: List[Player], search_string: str
     ) -> List[Player]:
         # This syntax is called "list comprehension" in Python, and can be handy for simple filtering like this :)
-        return [player for player in players if player.nom == search_string]
+        search_words = set(search_string.lower().split())
+        return [player for player in players if set(player.nom.lower().split()) == search_words]
