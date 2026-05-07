@@ -23,8 +23,11 @@ def show_player_profile(players_df, sport: Sport, competition: Competition = Non
         print(f"  Taille : {p['height']} cm")
         print(f"  Main dominante : {p['hand']}")
         print("\nStats :")
-        print(f"  Matchs joués : {len(played)}")
-        print(f"  Matchs gagnés : {len(wins)}")
+        if len(played) == 0:
+            print("  Aucun match trouvé pour ce joueur.")
+        else:
+            print(f"  Matchs joués : {len(played)}")
+            print(f"  Matchs gagnés : {len(wins)}")
 
     elif competition and competition.nom == "european_leagues":
         teams_df = pd.read_csv("./data/football_european_leagues/team.csv")
@@ -59,8 +62,11 @@ def show_player_profile(players_df, sport: Sport, competition: Competition = Non
         print("\nÉquipe :")
         print(f"  Équipe : {team_name}")
         print("\nStats :")
-        print(f"  Matchs joués : {total_matches}")
-        print(f"  Matchs gagnés : {total_wins}")
+        if total_matches == 0:
+            print("  Aucun match trouvé pour ce joueur.")
+        else:
+            print(f"  Matchs joués : {total_matches}")
+            print(f"  Matchs gagnés : {total_wins}")
 
     elif competition and competition.nom == "champions_league":
         if len(players_df) == 1:
@@ -76,20 +82,22 @@ def show_player_profile(players_df, sport: Sport, competition: Competition = Non
         away_matches = matches_df[matches_df["team_away"] == club]
         home_wins = home_matches[home_matches["score_team_home"] > home_matches["score_team_away"]]
         away_wins = away_matches[away_matches["score_team_away"] > away_matches["score_team_home"]]
+        total_matches = len(home_matches) + len(away_matches)
         print(f"\n--- {p['player_name']} ---")
         print("\nÉquipe :")
         print(f"  Club : {p['club']}")
         print(f"  Position : {p['position']}")
         print("\nStats :")
-        print(f"  Matchs joués : {p['match_played']}")
-        print(f"  Matchs gagnés : {len(home_wins) + len(away_wins)}")
-        print(f"  Buts : {p['goals']}")
-        print(f"  Passes : {p['assists']}")
-        print(f"  Minutes jouées : {p['minutes_played']}")
+        if total_matches == 0:
+            print("  Aucun match trouvé pour ce joueur.")
+        else:
+            print(f"  Matchs joués : {p['match_played']}")
+            print(f"  Matchs gagnés : {len(home_wins) + len(away_wins)}")
+            print(f"  Buts : {p['goals']}")
+            print(f"  Passes : {p['assists']}")
+            print(f"  Minutes jouées : {p['minutes_played']}")
 
     elif sport.nom == "starcraft_2":
-        for i, row in players_df.iterrows():
-            print(f"{i} - {row['name']}")
         if len(players_df) == 1:
             index = players_df.index[0]
         else:
@@ -105,12 +113,15 @@ def show_player_profile(players_df, sport: Sport, competition: Competition = Non
         print("\nInfos personnelles :")
         print(f"  Nationalité : {p['nationality']}")
         print(f"  Date de naissance : {p['birthdate']}")
-        print(f"\nÉquipe :")
+        print("\nÉquipe :")
         print(f"  Team : {p['team']}")
-        print(f"\nStats :")
-        print(f"  Race : {p['race']}")
-        print(f"  Matchs joués : {len(played)}")
-        print(f"  Matchs gagnés : {len(wins)}")
+        print("\nStats :")
+        if len(played) == 0:
+            print("  Aucun match trouvé pour ce joueur.")
+        else:
+            print(f"  Race : {p['race']}")
+            print(f"  Matchs joués : {len(played)}")
+            print(f"  Matchs gagnés : {len(wins)}")
 
     elif sport.nom == "chess":
         if len(players_df) == 1:
@@ -134,8 +145,11 @@ def show_player_profile(players_df, sport: Sport, competition: Competition = Non
         print(f"  Rating standard : {p['rating_standard']}")
         print(f"  Rating rapide : {p['rating_rapid']}")
         print(f"  Rating blitz : {p['rating_blitz']}")
-        print(f"  Matchs joués : {len(played)}")
-        print(f"  Matchs gagnés : {len(wins)}")
+        if len(played) == 0:
+            print("  Aucun match trouvé pour ce joueur.")
+        else:
+            print(f"  Matchs joués : {len(played)}")
+            print(f"  Matchs gagnés : {len(wins)}")
 
     elif sport.nom == "volleyball":
         if len(players_df) == 1:
@@ -173,8 +187,11 @@ def show_player_profile(players_df, sport: Sport, competition: Competition = Non
         print("\nÉquipe :")
         print(f"  Pays : {p['country_code']}")
         print("\nStats :")
-        print(f"  Matchs joués : {len(team_matches)}")
-        print(f"  Matchs gagnés : {wins}")
+        if len(team_matches) == 0:
+            print("  Aucun match trouvé pour ce pays.")
+        else:
+            print(f"  Matchs joués : {len(team_matches)}")
+            print(f"  Matchs gagnés : {wins}")
 
     elif sport.nom == "badminton":
         if len(players_df) == 1:
@@ -192,8 +209,66 @@ def show_player_profile(players_df, sport: Sport, competition: Competition = Non
         print(f"  Pays : {p['country']}")
         print(f"  Continent : {p['continent']}")
         print("\nStats :")
-        print(f"  Matchs joués : {len(played)}")
-        print(f"  Matchs gagnés : {len(wins)}")
+        if len(played) == 0:
+            print("  Aucun match trouvé pour ce joueur.")
+        else:
+            print(f"  Matchs joués : {len(played)}")
+            print(f"  Matchs gagnés : {len(wins)}")
+
+    elif sport.nom == "league_of_legends":
+        if len(players_df) == 1:
+            index = players_df.index[0]
+        else:
+            for i, row in players_df.iterrows():
+                print(f"{i} - {row['name']} ({row['pseudo']})")
+            index = int(input("Sélectionne un joueur (numéro) : "))
+        p = players_df.loc[index]
+        matches_df = pd.read_csv("./data/league_of_legends/match.csv")
+        player_cols = ["top_team_blue", "jungle_team_blue", "mid_team_blue", "bot_team_blue", "sup_team_blue",
+                       "top_team_red", "jungle_team_red", "mid_team_red", "bot_team_red", "sup_team_red"]
+        played = matches_df[matches_df[player_cols].isin([p["pseudo"]]).any(axis=1)]
+        wins = played[((played[["top_team_blue","jungle_team_blue","mid_team_blue","bot_team_blue","sup_team_blue"]].isin([p["pseudo"]]).any(axis=1)) & (played["winner"] == played["team_blue"])) |
+                      ((played[["top_team_red","jungle_team_red","mid_team_red","bot_team_red","sup_team_red"]].isin([p["pseudo"]]).any(axis=1)) & (played["winner"] == played["team_red"]))]
+        print(f"\n--- {p['name']} ({p['pseudo']}) ---")
+        print("\nInfos personnelles :")
+        print(f"  Pays : {p['country_of_birth']}")
+        print(f"  Date de naissance : {p['birthdate']}")
+        print(f"  Rôle : {p['role']}")
+        print("\nÉquipe :")
+        print(f"  Équipe : {p['team']}")
+        print("\nStats :")
+        if len(played) == 0:
+            print("  Aucun match trouvé pour ce joueur.")
+        else:
+            print(f"  Matchs joués : {len(played)}")
+            print(f"  Matchs gagnés : {len(wins)}")
+
+    elif sport.nom == "counter_strike_2":
+        if len(players_df) == 1:
+            index = players_df.index[0]
+        else:
+            for i, row in players_df.iterrows():
+                print(f"{i} - {row['name']} ({row['pseudo']})")
+            index = int(input("Sélectionne un joueur (numéro) : "))
+        p = players_df.loc[index]
+        matches_df = pd.read_csv("./data/counter_strike_2/match.csv")
+        team = p["team"]
+        played = matches_df[(matches_df["team_1"] == team) | (matches_df["team_2"] == team)]
+        wins = played[((played["team_1"] == team) & (played["score_team_1"] > played["score_team_2"])) |
+                      ((played["team_2"] == team) & (played["score_team_2"] > played["score_team_1"]))]
+        print(f"\n--- {p['name']} ({p['pseudo']}) ---")
+        print("\nInfos personnelles :")
+        print(f"  Nationalité : {p['nationality']}")
+        print(f"  Date de naissance : {p['birthdate']}")
+        print(f"  Rôle : {p['role']}")
+        print("\nÉquipe :")
+        print(f"  Équipe : {p['team']}")
+        print("\nStats :")
+        if len(played) == 0:
+            print("  Aucun match trouvé pour ce joueur.")
+        else:
+            print(f"  Matchs joués : {len(played)}")
+            print(f"  Matchs gagnés : {len(wins)}")
 
     else:  # basketball
         teams_df = pd.read_csv("./data/basketball/team.csv")
@@ -218,10 +293,14 @@ def show_player_profile(players_df, sport: Sport, competition: Competition = Non
         print(f"  Date de naissance : {p['birthdate']}")
         print(f"  Taille : {p['height']}")
         print(f"  Poids : {p['weight']} lbs")
-        print("\n Équipe :")
+        print("\nÉquipe :")
         print(f"  Équipe : {team_name}")
         print(f"  Numéro : {p['jersey']}")
         print(f"  Position : {p['position']}")
         print("\nStats :")
-        print(f"  Matchs joués : {len(home_matches) + len(away_matches)}")
-        print(f"  Matchs gagnés : {len(home_wins) + len(away_wins)}")
+        total_matches = len(home_matches) + len(away_matches)
+        if total_matches == 0:
+            print("  Aucun match trouvé pour ce joueur.")
+        else:
+            print(f"  Matchs joués : {total_matches}")
+            print(f"  Matchs gagnés : {len(home_wins) + len(away_wins)}")

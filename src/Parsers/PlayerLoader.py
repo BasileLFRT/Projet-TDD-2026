@@ -26,11 +26,10 @@ player_loaders_by_competition = {
     "volleyball_women": VolleyballWomenPlayerLoader,
     "chess": ChessPlayerLoader,
     "badminton": BadmintonPlayerLoader,
-    "lol": LoLPlayerLoader,
-    "cs2": CS2PlayerLoader,
+    "league_of_legends": LoLPlayerLoader,
+    "counter_strike_2": CS2PlayerLoader,
     "starcraft_2": StarcraftPlayerLoader
 }
-
 
 
 class PlayerLoader :

@@ -75,6 +75,30 @@ def show_team_ranking(matches_df: pd.DataFrame, sport: Sport, competition: Compe
         for i, (team, points) in enumerate(sorted_teams):
             print(f"  {i+1}. {team} — {points} pts")
 
+    elif sport.nom == "league_of_legends":
+        wins = {}
+        for _, row in matches_df.iterrows():
+            winner = row["winner"]
+            loser = row["team_red"] if row["winner"] == row["team_blue"] else row["team_blue"]
+            wins[winner] = wins.get(winner, 0) + 1
+            wins.setdefault(loser, 0)
+        sorted_teams = sorted(wins.items(), key=lambda x: x[1], reverse=True)
+        print("\nClassement des équipes :")
+        for i, (team, w) in enumerate(sorted_teams):
+            print(f"  {i+1}. {team} — {w} victoires")
+
+    elif sport.nom == "counter_strike_2":
+        wins = {}
+        for _, row in matches_df.iterrows():
+            winner = row["team_1"] if int(row["score_team_1"]) > int(row["score_team_2"]) else row["team_2"]
+            loser = row["team_2"] if winner == row["team_1"] else row["team_1"]
+            wins[winner] = wins.get(winner, 0) + 1
+            wins.setdefault(loser, 0)
+        sorted_teams = sorted(wins.items(), key=lambda x: x[1], reverse=True)
+        print("\nClassement des équipes :")
+        for i, (team, w) in enumerate(sorted_teams):
+            print(f"  {i+1}. {team} — {w} victoires")
+
     else:  # basketball
         for _, row in matches_df.iterrows():
             home = row["team_id_home"]

@@ -24,8 +24,8 @@ match_loaders_by_competition = {
     "volleyball_women": VolleyballWomenMatchLoader,
     "chess": ChessMatchLoader,
     "badminton": BadmintonMatchLoader,
-    "lol": LoLMatchLoader,
-    "cs2": CS2MatchLoader,
+    "league_of_legends": LoLMatchLoader,
+    "counter_strike_2": CS2MatchLoader,
     "starcraft_2": StarcraftMatchLoader,
 }
 

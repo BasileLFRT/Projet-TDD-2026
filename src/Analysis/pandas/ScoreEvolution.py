@@ -6,15 +6,20 @@ from src.Model.Sport import Sport
 
 def show_score_evolution(matches_df: pd.DataFrame, sport: Sport, competition: Competition = None, nom_recherche = None):
 
-    if sport.nom in ["chess", "badminton", "starcraft_2"]:
-        # sports individuels — évolution des victoires d'un joueur
+    if sport.nom in ["chess", "badminton", "starcraft_2", "league_of_legends", "counter_strike_2"]:
         if sport.nom == "chess":
             players_df = pd.read_csv("./data/chess/player.csv")
             name_col = "name"
         elif sport.nom == "badminton":
             players_df = pd.read_csv("./data/badminton/player.csv")
             name_col = "name"
-        else:
+        elif sport.nom == "league_of_legends":
+            players_df = pd.read_csv("./data/league_of_legends/player.csv")
+            name_col = "pseudo"
+        elif sport.nom == "counter_strike_2":
+            players_df = pd.read_csv("./data/counter_strike_2/player.csv")
+            name_col = "pseudo"
+        else:  # starcraft_2
             players_df = pd.read_csv("./data/starcraft_2/player.csv")
             name_col = "pseudo"
 
@@ -38,6 +43,23 @@ def show_score_evolution(matches_df: pd.DataFrame, sport: Sport, competition: Co
                 (matches_df["player_2"] == player_name)
             ].copy()
             player_matches["win"] = player_matches["winner"] == player_name
+        elif sport.nom == "league_of_legends":
+            blue_cols = ["top_team_blue", "jungle_team_blue", "mid_team_blue", "bot_team_blue", "sup_team_blue"]
+            red_cols = ["top_team_red", "jungle_team_red", "mid_team_red", "bot_team_red", "sup_team_red"]
+            player_matches = matches_df[matches_df[blue_cols + red_cols].isin([player_name]).any(axis=1)].copy()
+            player_matches["win"] = (
+                (player_matches[blue_cols].isin([player_name]).any(axis=1) & (player_matches["winner"] == player_matches["team_blue"])) |
+                (player_matches[red_cols].isin([player_name]).any(axis=1) & (player_matches["winner"] == player_matches["team_red"]))
+            )
+        elif sport.nom == "counter_strike_2":
+            team = players_df.iloc[index]["team"]
+            player_matches = matches_df[
+                (matches_df["team_1"] == team) | (matches_df["team_2"] == team)
+            ].copy()
+            player_matches["win"] = (
+                ((player_matches["team_1"] == team) & (player_matches["score_team_1"] > player_matches["score_team_2"])) |
+                ((player_matches["team_2"] == team) & (player_matches["score_team_2"] > player_matches["score_team_1"]))
+            )
         else:  # starcraft_2
             player_matches = matches_df[
                 (matches_df["player_1"] == player_name) |
@@ -47,7 +69,11 @@ def show_score_evolution(matches_df: pd.DataFrame, sport: Sport, competition: Co
             s2 = pd.to_numeric(player_matches["score_player_2"], errors='coerce')
             player_matches["win"] = ((player_matches["player_1"] == player_name) & (s1 > s2)) | \
                 ((player_matches["player_2"] == player_name) & (s2 > s1))
-                
+
+        if len(player_matches) == 0:
+            print("Aucun match trouvé pour ce joueur.")
+            return
+
         player_matches["win"] = player_matches["win"].astype(int)
         player_matches["cumulative_wins"] = player_matches["win"].cumsum()
 
@@ -83,6 +109,11 @@ def show_score_evolution(matches_df: pd.DataFrame, sport: Sport, competition: Co
             (matches_df["winner_id"].astype(str) == player_id) |
             (matches_df["loser_id"].astype(str) == player_id)
         ].sort_values("date")
+
+        if len(player_matches) == 0:
+            print("Aucun match trouvé pour ce joueur.")
+            return
+
         player_matches["win"] = (player_matches["winner_id"].astype(str) == player_id).astype(int)
         player_matches["cumulative_wins"] = player_matches["win"].cumsum()
 
@@ -146,8 +177,6 @@ def show_score_evolution(matches_df: pd.DataFrame, sport: Sport, competition: Co
 
     elif sport.nom == "volleyball":
         if competition and competition.nom == "volleyball_men":
-            home = matches_df[matches_df["country_code_1"] == team_name][["date", "set_country_1"]].rename(columns={"set_country_1": "goals"})
-            away = matches_df[matches_df["country_code_2"] == team_name][["date", "set_country_2"]].rename(columns={"set_country_2": "goals"})
             teams = sorted(set(matches_df["country_code_1"].tolist() + matches_df["country_code_2"].tolist()))
         else:
             teams = sorted(set(matches_df["country_1"].tolist() + matches_df["country_2"].tolist()))
@@ -194,6 +223,10 @@ def show_score_evolution(matches_df: pd.DataFrame, sport: Sport, competition: Co
 
     else:
         raise ValueError("Fonctionnalité non disponible pour ce sport")
+
+    if len(team_matches) == 0:
+        print("Aucun match trouvé pour cette équipe.")
+        return
 
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 6))
     ax1.plot(range(len(team_matches)), team_matches["goals"])

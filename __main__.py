@@ -10,7 +10,9 @@ from src.Analysis.homemade.GoatFinder import find_the_goat
 from src.Analysis.pandas.GoatFinderStarcraft import find_the_goat_starcraft
 from src.Analysis.pandas.GoatFinderBasketball import find_the_goat_basketball
 from src.Analysis.pandas.GoatFinderVolleyball import find_the_goat_volleyball
+from src.Analysis.pandas.GoatFinderLoL import find_the_goat_lol
 from src.Analysis.pandas.GoatFinderBadminton import find_the_goat_badminton
+from src.Analysis.pandas.GoatFinderCS2 import find_the_goat_cs2
 from src.Analysis.pandas.GoatFinderChess import find_the_goat_chess
 from src.Analysis.pandas.GoatFinderTennis import find_the_goat_tennis
 from src.Analysis.pandas.BestMatch import show_best_match
@@ -34,6 +36,8 @@ print("4 - StarCraft 2")
 print("5 - Chess")
 print("6 - Volleyball")
 print("7 - Badminton")
+print("8 - League of Legends")
+print("9 - Counter-Strike 2")
 choix_sport = input("Ton choix : ")
 
 if choix_sport == "1":
@@ -79,6 +83,12 @@ elif choix_sport == "6":
 elif choix_sport == "7":
     sport = Sport(nom="badminton")
     competition = None
+elif choix_sport == "8":
+    sport = Sport(nom="league_of_legends")
+    competition = None
+elif choix_sport == "9":
+    sport = Sport(nom="counter_strike_2")
+    competition = None
 
 matches = MatchLoader().load_all_matches(sport, competition)
 
@@ -98,6 +108,10 @@ elif sport.nom == "volleyball" and competition.nom == "volleyball_women":
     matches_df = pd.read_csv("./data/volleyball/match_women.csv")
 elif sport.nom == "badminton":
     matches_df = pd.read_csv("./data/badminton/match.csv")
+elif sport.nom == "league_of_legends":
+    matches_df = pd.read_csv("./data/league_of_legends/match.csv")
+elif sport.nom == "counter_strike_2":
+    matches_df = pd.read_csv("./data/counter_strike_2/match.csv")
 else: #basketball
     matches_df = pd.read_csv("./data/basketball/game.csv")
 
@@ -117,6 +131,10 @@ elif sport.nom == "volleyball" and competition.nom == "volleyball_women":
     players_df = pd.read_csv("./data/volleyball/player_women.csv")
 elif sport.nom == "badminton":
     players_df = pd.read_csv("./data/badminton/player.csv")
+elif sport.nom == "league_of_legends":
+    players_df = pd.read_csv("./data/league_of_legends/player.csv")
+elif sport.nom == "counter_strike_2":
+    players_df = pd.read_csv("./data/counter_strike_2/player.csv")
 else: #basketball
     players_df = pd.read_csv("./data/basketball/player.csv")
 
@@ -205,7 +223,11 @@ elif choix_regarder == "2":
                     print(f"{i} - {row['name']}")
                 elif sport.nom == "volleyball":
                     print(f"{i} - {row['name']} ({row['country_code']})")
-                else:
+                elif sport.nom == "league_of_legends":
+                    print(f"{i} - {row['name']} ({row['pseudo']})")
+                elif sport.nom in ["league_of_legends", "counter_strike_2"]:
+                    print(f"{i} - {row['name']} ({row['pseudo']})")
+                else: #foot
                     print(f"{i} - {row['player_name']}")
             index = int(input("Ton choix : "))
             players_df = players_df.iloc[[index]]
@@ -235,7 +257,7 @@ elif choix_regarder == "2":
                                 print(f"{i} - {row['name_first']} {row['name_last']}")
                             elif sport.nom == "basketball":
                                 print(f"{i} - {row['first_name']} {row['last_name']}")
-                            elif sport.nom in ["starcraft_2", "chess", "badminton"]:
+                            elif sport.nom in ["starcraft_2", "chess", "badminton", "league_of_legends", "counter_strike_2"]:
                                 print(f"{i} - {row['name']}")
                             elif sport.nom == "volleyball":
                                 print(f"{i} - {row['name']} ({row['country_code']})")
@@ -257,7 +279,7 @@ elif choix_regarder == "2":
                     filtre = (players_df["first_name"] + " " + players_df["last_name"]) == nom
                 elif sport.nom == "tennis":
                     filtre = (players_df["name_first"] + " " + players_df["name_last"]) == nom
-                elif sport.nom in ["starcraft_2", "chess", "badminton"]:
+                elif sport.nom in ["starcraft_2", "chess", "badminton", "league_of_legends", "counter_strike_2"]:
                     filtre = players_df["name"] == nom
                 else:
                     filtre = players_df["player_name"] == nom
@@ -268,7 +290,7 @@ elif choix_regarder == "2":
                         print(f"{i} - {row['name_first']} {row['name_last']}")
                     elif sport.nom == "basketball":
                         print(f"{i} - {row['first_name']} {row['last_name']}")
-                    elif sport.nom in ["starcraft_2", "chess", "badminton"]:
+                    elif sport.nom in ["starcraft_2", "chess", "badminton", "league_of_legends", "counter_strike_2"]:
                         print(f"{i} - {row['name']}")
                     elif sport.nom == "volleyball":
                         print(f"{i} - {row['name']} ({row['country_code']})")
@@ -304,6 +326,10 @@ elif choix_regarder == "3":
             the_goat = find_the_goat_volleyball(players_df, matches_df, competition)
         elif sport.nom == "badminton":
             the_goat = find_the_goat_badminton(players_df, matches_df)
+        elif sport.nom == "league_of_legends":
+            the_goat = find_the_goat_lol(players_df, matches_df)
+        elif sport.nom == "counter_strike_2":
+            the_goat = find_the_goat_cs2(players_df, matches_df)
         else:
             setting = input("Choisis, 0=pandas, 1=à_la_main\n")
             if setting == "0":

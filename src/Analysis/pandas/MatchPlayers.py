@@ -82,6 +82,27 @@ def show_match_players(matches: list[Match], sport: Sport, competition: Competit
         print(f"  {match_choisi.team2}")
         return
 
+    elif sport.nom == "league_of_legends":
+        matches_df = pd.read_csv("./data/league_of_legends/match.csv")
+        match_row = matches_df[(matches_df["team_blue"] == match_choisi.team1) & (matches_df["team_red"] == match_choisi.team2)].iloc[0]
+        print(f"\nJoueurs du match :")
+        print(f"  Équipe bleue ({match_choisi.team1}) :")
+        for col in ["top_team_blue", "jungle_team_blue", "mid_team_blue", "bot_team_blue", "sup_team_blue"]:
+            print(f"    {col.split('_')[0]} : {match_row[col]}")
+        print(f"  Équipe rouge ({match_choisi.team2}) :")
+        for col in ["top_team_red", "jungle_team_red", "mid_team_red", "bot_team_red", "sup_team_red"]:
+            print(f"    {col.split('_')[0]} : {match_row[col]}")
+
+    elif sport.nom == "counter_strike_2":
+        players_df = pd.read_csv("./data/counter_strike_2/player.csv")
+        print(f"\nJoueurs du match :")
+        print(f"  {match_choisi.team1} vs {match_choisi.team2}")
+        for _, player in players_df[players_df["team"] == match_choisi.team1].iterrows():
+            print(f"  {player['name']} ({player['pseudo']}) — {player['role']}")
+        print()
+        for _, player in players_df[players_df["team"] == match_choisi.team2].iterrows():
+            print(f"  {player['name']} ({player['pseudo']}) — {player['role']}")
+
     else: #basketball
         players_in_match = players_df[players_df["team_id"].isin([int(match_choisi.team1), int(match_choisi.team2)])]
         for _, player in players_in_match.iterrows():

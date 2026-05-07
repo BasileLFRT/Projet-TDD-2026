@@ -30,8 +30,11 @@ def show_team_matches(matches_df: pd.DataFrame, sport: Sport, competition: Compe
         team_name = get_team_name(teams_df, "team_long_name")
         team_id = teams_df[teams_df["team_long_name"] == team_name].iloc[0]["team_api_id"]
         team_matches = matches_df[(matches_df["home_team_api_id"] == team_id) | (matches_df["away_team_api_id"] == team_id)]
-        for _, match in team_matches.iterrows():
-            print(f"{match['date']} | {match['home_team_api_id']} {int(match['home_team_goal'])} - {int(match['away_team_goal'])} {match['away_team_api_id']}")
+        if len(team_matches) == 0:
+            print(f"Aucun match trouvé pour cette équipe.")
+        else:
+            for _, match in team_matches.iterrows():
+                print(f"{match['date']} | {match['home_team_api_id']} {int(match['home_team_goal'])} - {int(match['away_team_goal'])} {match['away_team_api_id']}")
 
     elif competition and competition.nom == "champions_league":
         teams = sorted(set(matches_df["team_home"].tolist() + matches_df["team_away"].tolist()))
@@ -46,8 +49,11 @@ def show_team_matches(matches_df: pd.DataFrame, sport: Sport, competition: Compe
                 print(f"{i} - {team}")
             team = teams[int(input("Sélectionne une équipe (numéro) : "))]
         team_matches = matches_df[(matches_df["team_home"] == team) | (matches_df["team_away"] == team)]
-        for _, match in team_matches.iterrows():
-            print(f"{match['date']} | {match['team_home']} {int(match['score_team_home'])} - {int(match['score_team_away'])} {match['team_away']}")
+        if len(team_matches) == 0:
+            print(f"Aucun match trouvé pour cette équipe.")
+        else:
+            for _, match in team_matches.iterrows():
+                print(f"{match['date']} | {match['team_home']} {int(match['score_team_home'])} - {int(match['score_team_away'])} {match['team_away']}")
 
     elif sport.nom == "volleyball":
         if competition.nom == "volleyball_men":
@@ -65,16 +71,58 @@ def show_team_matches(matches_df: pd.DataFrame, sport: Sport, competition: Compe
             for i, team in enumerate(teams):
                 print(f"{i} - {team}")
             team = teams[int(input("Sélectionne une équipe (numéro) : "))]
-
         team_matches = matches_df[(matches_df[team1_col] == team) | (matches_df[team2_col] == team)]
-        for _, match in team_matches.iterrows():
-            print(f"{match['date']} | {match[team1_col]} {int(match['set_country_1'])} - {int(match['set_country_2'])} {match[team2_col]}")
-        return 
+        if len(team_matches) == 0:
+            print(f"Aucun match trouvé pour cette équipe.")
+        else:
+            for _, match in team_matches.iterrows():
+                print(f"{match['date']} | {match[team1_col]} {int(match['set_country_1'])} - {int(match['set_country_2'])} {match[team2_col]}")
+
+    elif sport.nom == "league_of_legends":
+        teams = sorted(set(matches_df["team_blue"].tolist() + matches_df["team_red"].tolist()))
+        if choix_recherche == "1":
+            search_string = input("Nom de l'équipe : ")
+            results = [t for t in teams if search_string.lower() in t.lower()]
+            if len(results) == 0:
+                raise ValueError(f"Aucune équipe trouvée")
+            team = results[0] if len(results) == 1 else results[int(input("Ton choix : "))]
+        else:
+            for i, team in enumerate(teams):
+                print(f"{i} - {team}")
+            team = teams[int(input("Sélectionne une équipe (numéro) : "))]
+        team_matches = matches_df[(matches_df["team_blue"] == team) | (matches_df["team_red"] == team)]
+        if len(team_matches) == 0:
+            print(f"Aucun match trouvé pour cette équipe.")
+        else:
+            for _, match in team_matches.iterrows():
+                print(f"{match['date']} | {match['team_blue']} {int(match['kills_team_blue'])} - {int(match['kills_team_red'])} {match['team_red']} | Vainqueur: {match['winner']}")
+
+    elif sport.nom == "counter_strike_2":
+        teams = sorted(set(matches_df["team_1"].tolist() + matches_df["team_2"].tolist()))
+        if choix_recherche == "1":
+            search_string = input("Nom de l'équipe : ")
+            results = [t for t in teams if search_string.lower() in t.lower()]
+            if len(results) == 0:
+                raise ValueError(f"Aucune équipe trouvée")
+            team = results[0] if len(results) == 1 else results[int(input("Ton choix : "))]
+        else:
+            for i, team in enumerate(teams):
+                print(f"{i} - {team}")
+            team = teams[int(input("Sélectionne une équipe (numéro) : "))]
+        team_matches = matches_df[(matches_df["team_1"] == team) | (matches_df["team_2"] == team)]
+        if len(team_matches) == 0:
+            print("Aucun match trouvé pour cette équipe.")
+        else:
+            for _, match in team_matches.iterrows():
+                print(f"{match['date']} | {match['team_1']} {int(match['score_team_1'])} - {int(match['score_team_2'])} {match['team_2']}")
 
     else:  # basketball
         teams_df = pd.read_csv("./data/basketball/team.csv")
         team_name = get_team_name(teams_df, "full_name")
         team_id = teams_df[teams_df["full_name"] == team_name].iloc[0]["id"]
         team_matches = matches_df[(matches_df["team_id_home"] == team_id) | (matches_df["team_id_away"] == team_id)]
-        for _, match in team_matches.iterrows():
-            print(f"{match['game_date']} | {match['team_id_home']} {int(match['pts_home'])} - {int(match['pts_away'])} {match['team_id_away']}")
+        if len(team_matches) == 0:
+            print(f"Aucun match trouvé pour cette équipe.")
+        else:
+            for _, match in team_matches.iterrows():
+                print(f"{match['game_date']} | {match['team_id_home']} {int(match['pts_home'])} - {int(match['pts_away'])} {match['team_id_away']}")
