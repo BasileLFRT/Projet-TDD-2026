@@ -21,7 +21,20 @@ team_loaders_by_competition = {
 
 
 class TeamLoader:
+    """Permet de charger les données d'équipes à partir de fichiers csv
+    
+    C'est la classe centrale pour charger les données d'équipes,
+    elle délègue le travail aux classes spécifiques à chaque sport ou compétition
+    """
     def load_all_teams(self, sport: Sport, competition: Competition = None) -> list[Team]:
+        """Charge tous les équipes d'un sport ou d'une compétition donnée
+
+        Returns:
+            list[Team]: La liste de tous les équipes chargés
+
+        Raises:
+            Exception: Si le sport ou la compétition n'est pas supportée ou si le sport est individuel (sans équipes)
+            """
         key = competition.nom if competition else sport.nom
         loader = team_loaders_by_competition.get(key)
         if loader is None:

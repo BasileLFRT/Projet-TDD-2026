@@ -31,7 +31,20 @@ match_loaders_by_competition = {
 
 
 class MatchLoader():
+    """Permet de charger les données de matchs à partir de fichiers csv
+    
+    C'est la classe centrale pour charger les données de matchs,
+    elle délègue le travail aux classes spécifiques à chaque sport ou compétition
+    """
     def load_all_matches(self, sport: Sport, competition: Competition = None) -> list[Match]:
+        """Charge tous les matchs d'un sport ou d'une compétition donnée
+        
+        Returns:
+            list[Match]: La liste de tous les matchs chargés
+            
+        Raises:
+            Exception: Si le sport ou la compétition n'est pas supportée
+        """
         key = competition.nom if competition else sport.nom
         loader = match_loaders_by_competition.get(key)
         if loader is None:

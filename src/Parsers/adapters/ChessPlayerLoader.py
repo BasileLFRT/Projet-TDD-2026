@@ -2,7 +2,19 @@ import csv
 from src.Model.Player import Player
 
 class ChessPlayerLoader:
+    """Charge les joueurs d'échecs à partir d'un fichier CSV et les convertit en objets Player.
+    
+    Utilise les colonnes 'name', 'birth_year' et 'fide_id' du fichier CSV
+    """
     def load_all_players(self) -> list[Player]:
+        """Charge tous les joueurs d'échecs à partir du fichier CSV et les retourne sous forme de liste d'objets Player.
+        
+        Returns:
+            list[Player]: Une liste d'objets Player représentant les joueurs d'échecs
+        
+        Raises:
+            FileNotFoundError: Si le fichier CSV n'est pas trouvé
+            KeyError: Si les colonnes attendues ne sont pas présentes dans le fichier CSV"""
         players_list = []
         with open('./data/chess/player.csv', newline='') as csvfile:
             reader = csv.DictReader(csvfile)

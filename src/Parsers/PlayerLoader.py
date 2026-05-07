@@ -33,7 +33,19 @@ player_loaders_by_competition = {
 
 
 class PlayerLoader :
+    """Permet de charger les données de joueurs à partir de fichiers csv
+    
+    C'est la classe centrale pour charger les données de joueurs,
+    elle délègue le travail aux classes spécifiques à chaque sport ou compétition
+    """
     def load_all_players(self, sport: Sport, competition: Competition = None) -> list[Player]:
+        """Charge tous les joueurs d'un sport ou d'une compétition donnée
+        
+        Returns:
+            list[Player]: La liste de tous les joueurs chargés
+        
+        Raises:
+            Exception: Si le sport ou la compétition n'est pas supportée"""
         key = competition.nom if competition else sport.nom
         loader = player_loaders_by_competition.get(key)
         if loader is None:
